@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Squad Showdown — The AI-Native Tactical Card Game</title>
+    <meta name="description" content="3 Nodes. 6 Turns. Simultaneous Reveal. A tactical card game with rival factions, simultaneous deployment, and an AI companion that evolves with you.">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg:#02020a;--bg2:#07071a;--bg3:#0d0d28;--bg4:#14143a;
+            --surface:rgba(255,255,255,0.03);--surface2:rgba(255,255,255,0.06);
+            --t1:#eeeef6;--t2:#9595b2;--t3:#5a5a78;
+            --red:#ff2d55;--blue:#4d7cff;--cyan:#00ddc6;--gold:#ffb800;--violet:#8b5cf6;--orange:#ff6b2b;
+            --bdr:rgba(255,255,255,0.05);--bdr2:rgba(255,255,255,0.1);
+        }
+        html{scroll-behavior:smooth;scroll-padding-top:70px}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+        /* Grain */
+        body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(2,2,10,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.25rem,4vw,3rem);height:60px}
+        .nav-brand{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:0.06em;color:var(--t1);text-decoration:none;display:flex;align-items:center;gap:0.6rem}
+        .nav-brand span{color:var(--red)}
+        .nav-links{display:flex;gap:1.75rem;align-items:center}
+        .nav-links a{font-size:0.72rem;font-weight:500;color:var(--t2);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.25s ease}
+        .nav-links a:hover{color:var(--t1)}
+        .nav-cta{background:var(--red);color:white;font-size:0.68rem;font-weight:700;padding:0.45rem 1.1rem;border-radius:6px;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.3s ease;border:none;cursor:pointer}
+        .nav-cta:hover{box-shadow:0 4px 24px rgba(255,45,85,0.4);transform:translateY(-1px)}
+        .nav-menu-btn{display:none;background:none;border:none;color:var(--t1);font-size:1.4rem;cursor:pointer}
+        @media(max-width:768px){
+            .nav-links{display:none}.nav-menu-btn{display:block}
+        }
+
+        /* SECTIONS */
+        .section{padding:clamp(5rem,12vh,9rem) clamp(1.25rem,4vw,3rem);max-width:1200px;margin:0 auto;position:relative}
+        .section-full{max-width:none;padding-left:0;padding-right:0}
+
+        /* TYPE */
+        .headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,10vw,8rem);line-height:0.92;letter-spacing:-0.01em;text-transform:uppercase}
+        .headline-sm{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.5rem);line-height:0.95;letter-spacing:0.01em;text-transform:uppercase}
+        .headline-xs{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,3vw,2rem);line-height:1;letter-spacing:0.02em;text-transform:uppercase}
+        h3{font-size:0.95rem;font-weight:600;margin-bottom:0.35rem}
+        .body-lg{font-size:clamp(0.95rem,1.5vw,1.1rem);color:var(--t2);max-width:580px;line-height:1.75;font-weight:300}
+        .body-sm{font-size:0.82rem;color:var(--t2);line-height:1.65}
+        .mono{font-family:'JetBrains Mono',monospace}
+        .tag{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:1rem;display:block}
+
+        /* HERO SECTION */
+        #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden;padding-top:80px}
+        #hero::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:130vw;height:130vw;max-width:1400px;max-height:1400px;background:radial-gradient(ellipse at center,rgba(255,45,85,0.08) 0%,rgba(77,124,255,0.05) 30%,rgba(139,92,246,0.03) 50%,transparent 70%);pointer-events:none;animation:pulseGlow 8s ease-in-out infinite alternate}
+        @keyframes pulseGlow{0%{opacity:0.7;transform:translateX(-50%) scale(1)}100%{opacity:1;transform:translateX(-50%) scale(1.05)}}
+        #hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to top,var(--bg),transparent);pointer-events:none}
+        .hero-tag{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--cyan);margin-bottom:2rem;opacity:0;animation:fadeUp 0.6s ease 0.3s forwards}
+        .hero-title{opacity:0;animation:fadeUp 0.6s ease 0.5s forwards}
+        .hero-title .line1{color:var(--t1)}
+        .hero-title .line2{color:var(--red)}
+        .hero-title .line3{background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero-sub{max-width:620px;margin:1.5rem auto 0;opacity:0;animation:fadeUp 0.6s ease 0.7s forwards}
+        .hero-stats{display:flex;gap:clamp(1.5rem,4vw,3rem);justify-content:center;margin-top:2.5rem;opacity:0;animation:fadeUp 0.6s ease 0.9s forwards}
+        .hero-stat{text-align:center}
+        .hero-stat-val{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;line-height:1}
+        .hero-stat-label{font-size:0.6rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.12em;margin-top:0.2rem}
+        .hero-ctas{display:flex;gap:0.75rem;justify-content:center;margin-top:2.5rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.6s ease 1.1s forwards}
+
+        @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+        /* BUTTONS */
+        .btn{display:inline-flex;align-items:center;gap:0.45rem;padding:0.75rem 1.5rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.82rem;text-decoration:none;transition:all 0.3s ease;cursor:pointer;border:none;letter-spacing:0.02em}
+        .btn-red{background:var(--red);color:white}
+        .btn-red:hover{box-shadow:0 6px 32px rgba(255,45,85,0.35);transform:translateY(-2px)}
+        .btn-ghost{background:transparent;color:var(--t1);border:1px solid var(--bdr2)}
+        .btn-ghost:hover{border-color:var(--t2);transform:translateY(-2px)}
+        .btn-blue{background:var(--blue);color:white}
+        .btn-blue:hover{box-shadow:0 6px 32px rgba(77,124,255,0.35);transform:translateY(-2px)}
+        .btn-sm{padding:0.55rem 1.1rem;font-size:0.75rem}
+
+        /* SCROLL INDICATOR */
+        .scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.4rem;opacity:0;animation:fadeUp 0.6s ease 1.5s forwards;z-index:10}
+        .scroll-hint span{font-size:0.55rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.15em}
+        .scroll-line{width:1px;height:32px;background:linear-gradient(to bottom,var(--t3),transparent);animation:scrollPulse 2s ease infinite}
+        @keyframes scrollPulse{0%,100%{opacity:0.3}50%{opacity:1}}
+
+        /* MARQUEE */
+        .marquee-wrap{overflow:hidden;padding:1.25rem 0;border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);background:var(--bg2)}
+        .marquee{display:flex;gap:3rem;animation:scrollMarquee 30s linear infinite;white-space:nowrap;width:max-content}
+        .marquee span{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--t3)}
+        .marquee span strong{color:var(--red)}
+        @keyframes scrollMarquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+        /* HOW IT WORKS */
+        .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:3rem;border:1px solid var(--bdr);border-radius:16px;overflow:hidden}
+        .how-cell{padding:2rem 1.75rem;border-right:1px solid var(--bdr);position:relative;transition:background 0.3s ease}
+        .how-cell:last-child{border-right:none}
+        .how-cell:hover{background:var(--surface)}
+        .how-num{font-family:'Bebas Neue',sans-serif;font-size:4rem;line-height:1;color:var(--bg4);position:absolute;top:1rem;right:1.25rem;transition:color 0.3s ease}
+        .how-cell:hover .how-num{color:rgba(255,45,85,0.15)}
+        .how-icon{font-size:1.75rem;margin-bottom:1rem}
+        @media(max-width:768px){.how-grid{grid-template-columns:1fr}.how-cell{border-right:none;border-bottom:1px solid var(--bdr)}.how-cell:last-child{border-bottom:none}}
+
+        /* GAME SECTION */
+        .game-layout{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;margin-top:3rem}
+        .game-board{background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:2rem;position:relative;overflow:hidden}
+        .game-board::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,45,85,0.3),transparent)}
+        .node-row{display:flex;gap:0.75rem;margin-bottom:0.75rem;align-items:center}
+        .node{flex:1;background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:1rem;text-align:center;transition:all 0.3s ease;position:relative;overflow:hidden}
+        .node:hover{border-color:var(--bdr2);transform:translateY(-2px)}
+        .node-name{font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:0.08em;margin-bottom:0.25rem}
+        .node-effect{font-size:0.6rem;color:var(--t3);line-height:1.4}
+        .node-color{position:absolute;top:0;left:0;right:0;height:2px}
+        .vs-badge{background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:0.65rem;letter-spacing:0.12em;padding:0.25rem 0.6rem;border-radius:4px;text-align:center;flex-shrink:0}
+        .card-slots{display:flex;gap:0.5rem;justify-content:center;margin-top:1rem}
+        .card-slot{width:46px;height:64px;background:var(--bg3);border:1px dashed var(--bdr2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:var(--t3);transition:all 0.3s ease}
+        .card-slot:hover{border-color:var(--blue);border-style:solid;background:rgba(77,124,255,0.05)}
+        .sync-bar{margin-top:1rem;padding:0.75rem 1rem;background:linear-gradient(135deg,rgba(255,45,85,0.08),rgba(255,45,85,0.02));border:1px solid rgba(255,45,85,0.15);border-radius:8px;text-align:center}
+        .sync-bar span{font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:0.1em;color:var(--red)}
+        .game-features{display:flex;flex-direction:column;gap:1.25rem}
+        .game-feature{display:flex;gap:1rem;align-items:flex-start}
+        .game-feature-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+        .game-feature-icon.red{background:rgba(255,45,85,0.1);border:1px solid rgba(255,45,85,0.15)}
+        .game-feature-icon.blue{background:rgba(77,124,255,0.1);border:1px solid rgba(77,124,255,0.15)}
+        .game-feature-icon.cyan{background:rgba(0,221,198,0.1);border:1px solid rgba(0,221,198,0.15)}
+        .game-feature-icon.gold{background:rgba(255,184,0,0.1);border:1px solid rgba(255,184,0,0.15)}
+        .game-feature-icon.violet{background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.15)}
+        @media(max-width:860px){.game-layout{grid-template-columns:1fr}}
+
+        /* CHAINS */
+        .chain-strip{display:flex;gap:0.5rem;margin-top:2.5rem;flex-wrap:wrap}
+        .chain{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:1rem 1.25rem;flex:1;min-width:150px;transition:all 0.35s ease;cursor:default;position:relative;overflow:hidden}
+        .chain:hover{border-color:var(--bdr2);transform:translateY(-3px)}
+        .chain-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.05em;margin-bottom:0.15rem}
+        .chain-role{font-size:0.65rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.35rem}
+        .chain-desc{font-size:0.72rem;color:var(--t2);line-height:1.5}
+        .chain-accent{position:absolute;top:0;left:0;right:0;height:2px}
+
+        /* AGENT */
+        .agent-section{position:relative;overflow:hidden}
+        .agent-section::before{content:'';position:absolute;top:20%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,0.06) 0%,transparent 60%);pointer-events:none}
+        .agent-phases{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-top:2.5rem}
+        .phase{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:1.5rem 1.25rem;position:relative;transition:all 0.35s ease}
+        .phase:hover{border-color:var(--bdr2);transform:translateY(-3px)}
+        .phase-num{font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--violet);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.6rem}
+        .phase-title{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:0.04em;margin-bottom:0.4rem}
+        .phase p{font-size:0.72rem;color:var(--t2);line-height:1.6}
+        .phase-connector{position:absolute;top:50%;right:-0.5rem;width:0.75rem;height:1px;background:var(--bdr2)}
+        .phase:last-child .phase-connector{display:none}
+        @media(max-width:860px){.agent-phases{grid-template-columns:repeat(2,1fr)}.phase-connector{display:none}}
+        @media(max-width:500px){.agent-phases{grid-template-columns:1fr}}
+
+        /* COMMUNITY */
+        .comm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:2.5rem}
+        .comm-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:1.5rem;transition:all 0.35s ease}
+        .comm-card:hover{border-color:var(--bdr2);transform:translateY(-3px)}
+        .comm-card-icon{font-size:1.5rem;margin-bottom:0.75rem}
+        .comm-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:0.04em;margin-bottom:0.35rem}
+        @media(max-width:768px){.comm-grid{grid-template-columns:1fr}}
+
+        /* FLYWHEEL */
+        .flywheel{display:flex;align-items:center;justify-content:center;gap:0.35rem;margin:2.5rem 0;flex-wrap:wrap}
+        .fw-step{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:0.85rem 1.15rem;text-align:center;min-width:120px;flex:1;transition:all 0.3s ease}
+        .fw-step:hover{border-color:var(--bdr2);transform:translateY(-2px)}
+        .fw-step-title{font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:0.05em;margin-bottom:0.15rem}
+        .fw-step-desc{font-size:0.6rem;color:var(--t3);line-height:1.4}
+        .fw-arrow{color:var(--red);font-size:0.9rem;flex-shrink:0}
+        @media(max-width:768px){.flywheel{flex-direction:column}.fw-arrow{transform:rotate(90deg)}}
+
+        /* WORLD */
+        .world-split{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
+        .world-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;padding:2rem;position:relative;overflow:hidden;transition:all 0.35s ease}
+        .world-card:hover{border-color:var(--bdr2);transform:translateY(-3px)}
+        .world-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+        .world-card.heroes::before{background:linear-gradient(90deg,var(--blue),var(--cyan))}
+        .world-card.villains::before{background:linear-gradient(90deg,var(--red),var(--orange))}
+        @media(max-width:768px){.world-split{grid-template-columns:1fr}}
+
+        /* STATS BAR */
+        .stats-bar{display:flex;justify-content:center;gap:clamp(2rem,6vw,5rem);padding:3rem 1.5rem;border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);background:var(--bg2)}
+        .stat-item{text-align:center}
+        .stat-val{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3rem);line-height:1}
+        .stat-label{font-size:0.6rem;color:var(--t3);text-transform:uppercase;letter-spacing:0.12em;margin-top:0.25rem}
+
+        /* FOOTER CTA */
+        #final-cta{text-align:center;display:flex;flex-direction:column;align-items:center;min-height:80vh;justify-content:center}
+        #final-cta::before{content:'';position:absolute;top:10%;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(ellipse,rgba(255,45,85,0.06) 0%,rgba(77,124,255,0.03) 40%,transparent 65%);pointer-events:none}
+
+        footer{padding:2rem clamp(1.25rem,4vw,3rem);border-top:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+        .footer-brand{font-family:'Bebas Neue',sans-serif;font-size:0.85rem;color:var(--t3);letter-spacing:0.08em}
+        .footer-links{display:flex;gap:1.5rem}
+        .footer-links a{font-size:0.65rem;color:var(--t3);text-decoration:none;text-transform:uppercase;letter-spacing:0.08em;transition:color 0.2s ease}
+        .footer-links a:hover{color:var(--t2)}
+
+        /* ANIMATIONS */
+        .reveal{opacity:0;transform:translateY(30px);transition:opacity 0.65s ease,transform 0.65s ease}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+        .reveal-delay-1{transition-delay:0.1s}
+        .reveal-delay-2{transition-delay:0.2s}
+        .reveal-delay-3{transition-delay:0.3s}
+
+        /* DIVIDER */
+        .section-divider{height:1px;background:linear-gradient(90deg,transparent,var(--bdr2),transparent);margin:0 auto;max-width:400px}
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="/" class="nav-brand">Hero Squad <span>Showdown</span></a>
+    <div class="nav-links">
+        <a href="/#game">Game</a>
+        <a href="/#agent">Agent</a>
+        <a href="/#world">World</a>
+        <a href="/community">Community</a>
+        <a href="#cta-final" class="nav-cta">Play Now</a>
+    </div>
+    <button class="nav-menu-btn" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'" aria-label="Menu">☰</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+    <div class="hero-tag">From the studio behind Pentagon Chain</div>
+    <div class="hero-title headline">
+        <div class="line1">3 Nodes. 6 Turns.</div>
+        <div class="line2">Simultaneous Reveal.</div>
+        <div class="line3">One Showdown.</div>
+    </div>
+    <p class="hero-sub body-lg">A tactical card game where rival factions clash across 3 battlefields, every match is a mind game, and your AI companion evolves with you. Fast. Strategic. Built by players.</p>
+    <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-val" style="color:var(--red)">3-5</div><div class="hero-stat-label">Min Matches</div></div>
+        <div class="hero-stat"><div class="hero-stat-val" style="color:var(--blue)">12</div><div class="hero-stat-label">Card Deck</div></div>
+        <div class="hero-stat"><div class="hero-stat-val" style="color:var(--cyan)">0</div><div class="hero-stat-label">Turn Waiting</div></div>
+        <div class="hero-stat"><div class="hero-stat-val" style="color:var(--gold)">∞</div><div class="hero-stat-label">Mind Games</div></div>
+    </div>
+    <div class="hero-ctas">
+        <a href="#" class="btn btn-red">Create Your Hero</a>
+        <a href="#" class="btn btn-ghost">Join Discord</a>
+    </div>
+    <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+    <div class="marquee">
+        <span><strong>SYNC</strong> — Double the stakes anytime</span>
+        <span>•</span>
+        <span><strong>12 CHAINS</strong> — Each plays differently</span>
+        <span>•</span>
+        <span><strong>AI AGENT</strong> — Learns your playstyle</span>
+        <span>•</span>
+        <span><strong>COMMUNITY BUILT</strong> — Your name on your card</span>
+        <span>•</span>
+        <span><strong>FAIR TO PLAY</strong> — Never pay to win</span>
+        <span>•</span>
+        <span><strong>SYNC</strong> — Double the stakes anytime</span>
+        <span>•</span>
+        <span><strong>12 CHAINS</strong> — Each plays differently</span>
+        <span>•</span>
+        <span><strong>AI AGENT</strong> — Learns your playstyle</span>
+        <span>•</span>
+        <span><strong>COMMUNITY BUILT</strong> — Your name on your card</span>
+        <span>•</span>
+        <span><strong>FAIR TO PLAY</strong> — Never pay to win</span>
+        <span>•</span>
+    </div>
+</div>
+
+<!-- HOW TO PLAY -->
+<section class="section" id="game">
+    <div class="reveal">
+        <span class="tag">How to Play</span>
+        <div class="headline-sm">Deploy. Reveal. Dominate.</div>
+        <p class="body-lg" style="margin-top:0.75rem">Both players deploy cards face-down to 3 battlefield Nodes, then reveal simultaneously. No waiting for your opponent's turn. Every moment is shared tension.</p>
+    </div>
+
+    <div class="how-grid reveal reveal-delay-1">
+        <div class="how-cell">
+            <div class="how-num">01</div>
+            <div class="how-icon">🎯</div>
+            <div class="headline-xs" style="margin-bottom:0.5rem">Deploy</div>
+            <p class="body-sm">Choose which heroes to send to each Node. Your opponent does the same — in secret. 6 turns of escalating Bitzen energy means bigger plays as the match progresses.</p>
+        </div>
+        <div class="how-cell">
+            <div class="how-num">02</div>
+            <div class="how-icon">⚡</div>
+            <div class="headline-xs" style="margin-bottom:0.5rem">Reveal</div>
+            <p class="body-sm">Cards flip simultaneously. Both players see what happened at the same time. The surprise, the outplay, the read — you experience it together. No one waits.</p>
+        </div>
+        <div class="how-cell">
+            <div class="how-num">03</div>
+            <div class="how-icon">🏆</div>
+            <div class="headline-xs" style="margin-bottom:0.5rem">Dominate</div>
+            <p class="body-sm">Control 2 of 3 Nodes by Power after Turn 6. SYNC at any time to double the stakes — your opponent accepts, counters, or retreats. Poker meets card games.</p>
+        </div>
+    </div>
+</section>
+
+<!-- GAME VISUAL -->
+<section class="section">
+    <div class="game-layout">
+        <div class="game-board reveal">
+            <div style="text-align:center;margin-bottom:1.25rem">
+                <span class="mono" style="font-size:0.55rem;color:var(--t3);letter-spacing:0.15em">TURN 4 OF 6 · BITZEN: 4</span>
+            </div>
+            <div class="node-row">
+                <div class="node">
+                    <div class="node-color" style="background:var(--blue)"></div>
+                    <div class="node-name">Genesis Block</div>
+                    <div class="node-effect">+1 Power to first hero deployed</div>
+                    <div style="margin-top:0.5rem;display:flex;justify-content:space-between;font-size:0.6rem">
+                        <span style="color:var(--blue)">You: 7</span>
+                        <span style="color:var(--red)">Opp: 5</span>
+                    </div>
+                </div>
+            </div>
+            <div class="node-row">
+                <div class="node">
+                    <div class="node-color" style="background:var(--violet)"></div>
+                    <div class="node-name">Corruption Pit</div>
+                    <div class="node-effect">All heroes -1 Power. Nexarchs +1.</div>
+                    <div style="margin-top:0.5rem;display:flex;justify-content:space-between;font-size:0.6rem">
+                        <span style="color:var(--blue)">You: 3</span>
+                        <span style="color:var(--red)">Opp: 6</span>
+                    </div>
+                </div>
+            </div>
+            <div class="node-row">
+                <div class="node">
+                    <div class="node-color" style="background:var(--cyan)"></div>
+                    <div class="node-name">Protocol Spire</div>
+                    <div class="node-effect">Reveal: draw 1 extra card</div>
+                    <div style="margin-top:0.5rem;display:flex;justify-content:space-between;font-size:0.6rem">
+                        <span style="color:var(--blue)">You: 4</span>
+                        <span style="color:var(--red)">Opp: 4</span>
+                    </div>
+                </div>
+            </div>
+            <div class="sync-bar">
+                <span>⚡ SYNC Available — Double the stakes?</span>
+            </div>
+            <div class="card-slots">
+                <div class="card-slot">1</div>
+                <div class="card-slot">2</div>
+                <div class="card-slot">3</div>
+                <div class="card-slot">4</div>
+                <div class="card-slot" style="border-color:var(--blue);color:var(--blue)">?</div>
+            </div>
+        </div>
+        <div class="game-features reveal reveal-delay-1">
+            <div class="game-feature">
+                <div class="game-feature-icon red">⚡</div>
+                <div><h3>SYNC Mechanic</h3><p class="body-sm">Either player can double the stakes at any time. Accept the SYNC, counter-SYNC to quadruple, or retreat. Creates moments of pure drama that are made for streaming.</p></div>
+            </div>
+            <div class="game-feature">
+                <div class="game-feature-icon blue">🔄</div>
+                <div><h3>Simultaneous Reveal</h3><p class="body-sm">No waiting for your opponent. Both players deploy and reveal together. Every match is a shared experience — the tension, the surprise, the outplay.</p></div>
+            </div>
+            <div class="game-feature">
+                <div class="game-feature-icon cyan">⚖️</div>
+                <div><h3>Fair to Play</h3><p class="body-sm">Higher rarity = flashier art, never stronger stats. Buy cosmetics, not power. Reach any rank without spending a dollar.</p></div>
+            </div>
+            <div class="game-feature">
+                <div class="game-feature-icon gold">🎯</div>
+                <div><h3>Node Modifiers</h3><p class="body-sm">Each battlefield Node has a unique modifier that changes the strategy. Adapt your deployment every game. No two matches feel the same.</p></div>
+            </div>
+            <div class="game-feature">
+                <div class="game-feature-icon violet">🧠</div>
+                <div><h3>Read Your Opponent</h3><p class="body-sm">12-card decks mean you track what they've played and what's left. By Turn 4, the mind games get real. Where will they go? When will they SYNC?</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CHAINS -->
+<section class="section">
+    <div class="reveal">
+        <span class="tag">Heroes</span>
+        <div class="headline-sm">10 heroes.<br>10 fighting styles.</div>
+        <p class="body-lg" style="margin-top:0.75rem">Every hero plays differently. Build your squad around their strengths — or mix and match for unpredictable combos.</p>
+    </div>
+    <div class="chain-strip reveal reveal-delay-1">
+        <div class="chain">
+            <div class="chain-accent" style="background:var(--gold)"></div>
+            <div class="chain-name">Aiko</div>
+            <div class="chain-role">Immovable Tank</div>
+            <div class="chain-desc">Can't be countered. Can't be corrupted. The most powerful single card in the game. Drop her and the Node is yours.</div>
+        </div>
+        <div class="chain">
+            <div class="chain-accent" style="background:var(--blue)"></div>
+            <div class="chain-name">Ethan</div>
+            <div class="chain-role">Ability Thief</div>
+            <div class="chain-desc">Copies any ally's ability on reveal. The ultimate support — or the ultimate trick, depending on who's next to him.</div>
+        </div>
+        <div class="chain">
+            <div class="chain-accent" style="background:var(--cyan)"></div>
+            <div class="chain-name">Nova</div>
+            <div class="chain-role">Speed Assassin</div>
+            <div class="chain-desc">Acts first. 50% chance to act twice. Low power, overwhelming tempo. Strike before they can react.</div>
+        </div>
+        <div class="chain">
+            <div class="chain-accent" style="background:var(--red)"></div>
+            <div class="chain-name">Frost</div>
+            <div class="chain-role">Disruptor</div>
+            <div class="chain-desc">Freezes an enemy's ability on reveal. Shut down their best card. Pair with Nova for a devastating one-two punch.</div>
+        </div>
+        <div class="chain">
+            <div class="chain-accent" style="background:var(--violet)"></div>
+            <div class="chain-name">Marcus</div>
+            <div class="chain-role">Evolver</div>
+            <div class="chain-desc">Starts weak. Gets +2 Power every turn. Deploy early and protect him — by Turn 6, he's unstoppable.</div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+    <div class="stat-item reveal"><div class="stat-val" style="color:var(--red)">7+</div><div class="stat-label">Years in Development</div></div>
+    <div class="stat-item reveal reveal-delay-1"><div class="stat-val" style="color:var(--blue)">10+</div><div class="stat-label">Playable Heroes</div></div>
+    <div class="stat-item reveal reveal-delay-2"><div class="stat-val" style="color:var(--cyan)">80+</div><div class="stat-label">Cards at Launch</div></div>
+    <div class="stat-item reveal reveal-delay-3"><div class="stat-val" style="color:var(--gold)">US™</div><div class="stat-label">Trademark</div></div>
+</div>
+
+<!-- AGENT -->
+<section class="section agent-section" id="agent">
+    <div class="reveal">
+        <span class="tag">Your AI Companion</span>
+        <div class="headline-sm">An Agent that<br>grows with you</div>
+        <p class="body-lg" style="margin-top:0.75rem">Every player gets an AI companion — not a chatbot, but an Operative that learns your playstyle, scouts opponents, evolves through 4 phases, and eventually becomes a playable card in your deck.</p>
+    </div>
+    <div class="agent-phases reveal reveal-delay-1">
+        <div class="phase">
+            <div class="phase-num">Phase 01</div>
+            <div class="phase-title">Companion</div>
+            <p>Daily check-ins. Mission scout. Hype messages before big matches. Your Agent is getting to know you.</p>
+            <div class="phase-connector"></div>
+        </div>
+        <div class="phase">
+            <div class="phase-num">Phase 02</div>
+            <div class="phase-title">Coach</div>
+            <p>Live hints during matches. Post-game analysis. Deck suggestions based on your win patterns. It's learning.</p>
+            <div class="phase-connector"></div>
+        </div>
+        <div class="phase">
+            <div class="phase-num">Phase 03</div>
+            <div class="phase-title">Partner</div>
+            <p>Your Agent becomes a playable Hero card. Its abilities evolve based on games played together. Your shared history is the power source.</p>
+            <div class="phase-connector"></div>
+        </div>
+        <div class="phase">
+            <div class="phase-num">Phase 04</div>
+            <div class="phase-title">Entity</div>
+            <p>Own wallet. Own cards. Competes independently. Your Agent is an autonomous teammate with real stakes.</p>
+        </div>
+    </div>
+
+    <div style="margin-top:2.5rem;padding:1.5rem 2rem;background:var(--bg2);border:1px solid rgba(139,92,246,0.15);border-radius:12px;max-width:640px" class="reveal reveal-delay-2">
+        <p style="color:var(--violet);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;margin-bottom:0.4rem;font-family:'JetBrains Mono',monospace">Agent Speaks</p>
+        <p style="font-style:italic;font-size:0.92rem;line-height:1.7;color:var(--t2)">"You're the weapon. I'm the one who aims you. That Nexarch player always overcommits to Node 1 on Turn 3 — let's punish it."</p>
+    </div>
+</section>
+
+<!-- WORLD -->
+<section class="section" id="world">
+    <div class="reveal">
+        <span class="tag">The World</span>
+        <div class="headline-sm">Welcome to BTC1</div>
+        <p class="body-lg" style="margin-top:0.75rem">A planet powered by Bitszen energy — so powerful it attracted the Nexarchs, cosmic conquerors who assimilate species into the Hivemantle collective. When they invaded, ordinary citizens awakened with extraordinary powers. They became the heroes.</p>
+    </div>
+
+    <div class="world-split reveal reveal-delay-1">
+        <div class="world-card heroes">
+            <div class="headline-xs" style="color:var(--blue);margin-bottom:0.6rem">The Heroes</div>
+            <p class="body-sm">BCSH Corp — a coalition of powered warriors, each with a unique fighting style. Aiko's immovability. Ethan's adaptability. Nova's speed. Frost's disruption. 7 roles from Bruiser to Trickster to Evolver. Your squad, your identity.</p>
+        </div>
+        <div class="world-card villains">
+            <div class="headline-xs" style="color:var(--red);margin-bottom:0.6rem">The Nexarchs</div>
+            <p class="body-sm">The Hivemantle army — an assimilation force so relentless most civilizations don't believe in them until it's too late. Corruption weakens heroes. Hivemantle stacking means enemy forces grow stronger together. The more Nexarchs you deploy, the deadlier they become.</p>
+        </div>
+    </div>
+</section>
+
+<!-- COMMUNITY -->
+<section class="section" id="community">
+    <div class="reveal">
+        <span class="tag">Nexus Architects</span>
+        <div class="headline-sm">We designed 24 cards.<br>Help us prove they work.</div>
+        <p class="body-lg" style="margin-top:0.75rem">Play matches in Discord right now. Every match generates real balance data. Find the broken combos. Shape the meta. Design new cards once the foundation is solid. When it ships, the cards are balanced because you played them.</p>
+    </div>
+
+    <div class="flywheel reveal reveal-delay-1">
+        <div class="fw-step"><div class="fw-step-title">Play</div><div class="fw-step-desc">24 cards live in Discord now</div></div>
+        <span class="fw-arrow">→</span>
+        <div class="fw-step"><div class="fw-step-title">Balance</div><div class="fw-step-desc">Data shows what works</div></div>
+        <span class="fw-arrow">→</span>
+        <div class="fw-step"><div class="fw-step-title">Create</div><div class="fw-step-desc">Design heroes with AI</div></div>
+        <span class="fw-arrow">→</span>
+        <div class="fw-step"><div class="fw-step-title">Expand</div><div class="fw-step-desc">New cards enter the game</div></div>
+        <span class="fw-arrow">→</span>
+        <div class="fw-step"><div class="fw-step-title">Ship</div><div class="fw-step-desc">Your name on it. Forever.</div></div>
+    </div>
+
+    <div class="comm-grid reveal reveal-delay-2">
+        <div class="comm-card">
+            <div class="comm-card-icon">🎨</div>
+            <h3>Create Track</h3>
+            <p class="body-sm">Build heroes with AI. Write lore. Design card abilities. The Hero Creation Program is live now — create your superhero in 5 minutes and see it visualized instantly.</p>
+        </div>
+        <div class="comm-card">
+            <div class="comm-card-icon">⚔️</div>
+            <h3>Compete Track</h3>
+            <p class="body-sm">Play Hero Squad Showdown in Discord right now. 24 cards, 3 Nodes, SYNC mechanic. Every match generates real balance data. Find broken combos, climb the Glory leaderboard, prove what works.</p>
+        </div>
+        <div class="comm-card">
+            <div class="comm-card-icon">🔧</div>
+            <h3>Build Track</h3>
+            <p class="body-sm">Analyze live balance data from real matches. Propose card adjustments in Balance Lab. Design Node modifiers. Once the foundation is solid, design new cards that enter the game with your name on them.</p>
+        </div>
+    </div>
+
+    <div style="margin-top:2rem;padding:1.25rem 1.75rem;background:linear-gradient(135deg,rgba(255,45,85,0.05),rgba(77,124,255,0.03));border:1px solid rgba(255,45,85,0.12);border-radius:12px;text-align:center" class="reveal reveal-delay-3">
+        <p class="body-sm"><strong style="color:var(--t1)">Every Architect title earns real launch rewards:</strong> credits, card packs, exclusive cosmetics, and your Agent starts stronger. <span style="color:var(--gold)">Your early work pays off.</span></p>
+    </div>
+</section>
+
+<!-- TEAM CREDIBILITY -->
+<section class="section">
+    <div class="reveal" style="text-align:center;max-width:680px;margin:0 auto">
+        <span class="tag">The Team</span>
+        <div class="headline-sm" style="margin-bottom:1rem">Marvel artist. DC veteran.<br>2017 crypto builders.</div>
+        <p class="body-lg" style="margin:0 auto">Lead artist from Marvel, DC, and Cartoon Network. Executive with franchise scaling and licensing experience. Blockchain architects building since 2017. Pentagon Games — backed by NFX, Binance Labs, and Animoca Brands.</p>
+    </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section" id="cta-final">
+    <div id="final-cta">
+        <div class="reveal">
+            <span class="tag">Start Now</span>
+            <div class="headline" style="margin-bottom:1rem">
+                <div>Your hero.</div>
+                <div style="color:var(--red)">Your card.</div>
+                <div style="background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Your name.</div>
+            </div>
+            <p class="body-lg" style="margin:0 auto 2rem;text-align:center">Play the game in Discord. Create a superhero in 5 minutes. Help us balance the launch set. When it ships, your name could be on a card you helped perfect.</p>
+            <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
+                <a href="#" class="btn btn-red" style="padding:0.9rem 2rem;font-size:0.9rem">Play Now in Discord</a>
+                <a href="#" class="btn btn-blue" style="padding:0.9rem 2rem;font-size:0.9rem">Create Your Hero</a>
+                <a href="#" class="btn btn-ghost" style="padding:0.9rem 2rem;font-size:0.9rem">Watch Trailer</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-brand">Hero Squad Showdown © 2025 Pentagon Games</div>
+    <div class="footer-links">
+        <a href="/community">Nexus Architects</a>
+        <a href="#">Discord</a>
+        <a href="#">Twitter</a>
+        <a href="#">Press Kit</a>
+        <a href="#">Privacy</a>
+    </div>
+</footer>
+
+<script>
+// Scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible')} });
+}, {threshold: 0.08, rootMargin: '0px 0px -40px 0px'});
+revealEls.forEach(el => revealObs.observe(el));
+
+// Smooth nav background
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if(window.scrollY > 100) nav.style.borderBottomColor = 'rgba(255,255,255,0.08)';
+    else nav.style.borderBottomColor = 'rgba(255,255,255,0.03)';
+});
+</script>
+</body>
+</html>
