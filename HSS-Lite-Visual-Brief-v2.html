@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSS Lite + Balance Lab — Visual Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#06060c;--bg2:#0c0c18;--bg3:#12122a;--bg4:#1a1a3a;
+--text:#e8e8f0;--text2:#9898b8;--text3:#585878;
+--blue:#4466ff;--cyan:#00e5c8;--gold:#f5a623;--pink:#ff3366;--violet:#9b6dff;--green:#00cc88;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.65}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,6,12,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.04);padding:0.65rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;color:var(--text3);text-transform:uppercase}
+.nav-tag{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;padding:0.25rem 0.6rem;border:1px solid rgba(68,102,255,0.3);border-radius:99px;color:var(--blue);letter-spacing:0.08em}
+
+section{min-height:100vh;padding:7rem 2rem 5rem;max-width:1100px;margin:0 auto;position:relative}
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+.kicker{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--blue);margin-bottom:1.2rem;display:block}
+h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,4.2rem);font-weight:900;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1.5rem}
+h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:700;line-height:1.15;margin-bottom:1rem}
+h3{font-family:'Instrument Sans',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem}
+.sub{font-size:1.1rem;color:var(--text2);max-width:640px;line-height:1.75;margin-bottom:2rem}
+.accent{color:var(--blue)}.accent-cyan{color:var(--cyan)}.accent-gold{color:var(--gold)}.accent-pink{color:var(--pink)}.accent-green{color:var(--green)}
+
+/* HERO */
+#hero{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative}
+#hero::before{content:'';position:absolute;top:15%;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(68,102,255,0.06) 0%,rgba(0,229,200,0.03) 40%,transparent 70%);border-radius:50%;pointer-events:none}
+#hero .sub{margin-left:auto;margin-right:auto;max-width:700px}
+.hero-stat-row{display:flex;gap:3rem;margin-top:2.5rem;flex-wrap:wrap;justify-content:center}
+.hero-stat{text-align:center}
+.hero-stat-val{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900}
+.hero-stat-lab{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.15em;margin-top:0.15rem}
+
+/* CARDS EXIST SECTION */
+.card-roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.6rem;margin:2rem 0}
+.roster-card{background:var(--bg2);border-radius:10px;padding:0.8rem;text-align:center;border-left:3px solid;transition:all 0.3s;cursor:default}
+.roster-card:hover{transform:translateY(-3px)}
+.roster-card.btc{border-color:#FFB800}.roster-card.eth{border-color:#4D7CFF}.roster-card.sol{border-color:#00DDC6}
+.roster-card.ada{border-color:#0033AD}.roster-card.poly{border-color:#8B5CF6}.roster-card.avax{border-color:#FF2D55}
+.roster-card.link{border-color:#375BD2}.roster-card.dot{border-color:#E6007A}.roster-card.atom{border-color:#6F7390}
+.roster-card.base{border-color:#0052FF}.roster-card.nex{border-color:#990000}.roster-card.neutral{border-color:#666}
+.roster-name{font-weight:700;font-size:0.78rem;margin-bottom:0.15rem}
+.roster-stats{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:var(--text3)}
+.roster-type{font-family:'IBM Plex Mono',monospace;font-size:0.48rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.15rem}
+
+/* PROBLEM */
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:2rem 0}
+.problem-card{background:var(--bg2);border:1px solid rgba(255,51,102,0.15);border-radius:14px;padding:1.5rem;transition:all 0.4s}
+.problem-card:hover{border-color:rgba(255,51,102,0.35);transform:translateY(-3px);box-shadow:0 0 40px rgba(255,51,102,0.08)}
+.problem-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:rgba(255,51,102,0.2);margin-bottom:0.5rem}
+.problem-card h3{color:var(--pink);font-size:0.9rem}
+.problem-card p{color:var(--text2);font-size:0.82rem;line-height:1.65}
+
+/* DATA METRICS */
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.8rem;margin:2rem 0}
+.metric-item{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:1rem 1.2rem;transition:all 0.3s}
+.metric-item:hover{border-color:rgba(0,229,200,0.3);transform:translateY(-2px)}
+.metric-name{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:var(--cyan);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem}
+.metric-desc{font-size:0.78rem;color:var(--text2);line-height:1.5}
+.metric-example{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text3);margin-top:0.3rem;padding-top:0.3rem;border-top:1px solid rgba(255,255,255,0.04)}
+
+/* GAME SIM */
+.game-sim{background:var(--bg2);border:1px solid rgba(68,102,255,0.15);border-radius:16px;padding:2rem;margin:2rem 0;position:relative;overflow:hidden}
+.game-sim::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--gold))}
+.sim-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.04)}
+.sim-title{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--cyan);letter-spacing:0.12em;text-transform:uppercase}
+.sim-turn{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700}
+.sim-bitzen{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--gold)}
+.nodes-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.node-box{background:var(--bg3);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:1rem;text-align:center;min-height:140px;display:flex;flex-direction:column;justify-content:center;transition:all 0.4s}
+.node-box.revealed{border-color:rgba(68,102,255,0.25)}
+.node-name{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.4rem}
+.node-modifier{font-size:0.78rem;color:var(--text2);line-height:1.5}
+.node-mystery{font-size:1.5rem;opacity:0.3}
+.node-powers{display:flex;justify-content:center;gap:1.5rem;margin-top:0.8rem}
+.node-power{font-family:'IBM Plex Mono',monospace;font-size:0.65rem}
+.node-power.a{color:var(--blue)}.node-power.b{color:var(--pink)}
+.sim-cards{display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:1rem}
+.sim-card{background:var(--bg4);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:0.5rem 0.8rem;font-size:0.72rem;display:flex;align-items:center;gap:0.4rem;transition:all 0.3s;cursor:default}
+.sim-card:hover{border-color:rgba(68,102,255,0.4);transform:translateY(-2px)}
+.sim-card .cost{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--gold);font-weight:600}
+.sim-card .power{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--cyan);font-weight:600}
+.sim-card .name{font-weight:600}
+.sim-controls{display:flex;gap:0.75rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap}
+.sim-btn{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;padding:0.5rem 1.2rem;border-radius:8px;border:1px solid rgba(68,102,255,0.3);background:transparent;color:var(--blue);cursor:pointer;transition:all 0.3s}
+.sim-btn:hover{background:rgba(68,102,255,0.1);border-color:var(--blue);transform:translateY(-1px)}
+.sim-btn.active{background:var(--blue);color:white;border-color:var(--blue)}
+.sim-btn.sync-btn{border-color:rgba(255,51,102,0.4);color:var(--pink)}
+.sim-btn.sync-btn:hover{background:rgba(255,51,102,0.1)}
+
+/* THREE PHASES */
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:2.5rem 0}
+.phase{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:1.8rem;position:relative;overflow:hidden;transition:all 0.4s}
+.phase:hover{transform:translateY(-4px)}
+.phase::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.phase.p1::before{background:var(--blue)}.phase.p1:hover{border-color:rgba(68,102,255,0.3);box-shadow:0 8px 40px rgba(68,102,255,0.08)}
+.phase.p2::before{background:var(--gold)}.phase.p2:hover{border-color:rgba(245,166,35,0.3);box-shadow:0 8px 40px rgba(245,166,35,0.08)}
+.phase.p3::before{background:var(--green)}.phase.p3:hover{border-color:rgba(0,204,136,0.3);box-shadow:0 8px 40px rgba(0,204,136,0.08)}
+.phase-tag{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.6rem;display:block}
+.phase.p1 .phase-tag{color:var(--blue)}.phase.p2 .phase-tag{color:var(--gold)}.phase.p3 .phase-tag{color:var(--green)}
+.phase h3{font-size:1.1rem;margin-bottom:0.6rem}
+.phase p{font-size:0.8rem;color:var(--text2);line-height:1.65;margin-bottom:0.8rem}
+.phase-items{list-style:none}
+.phase-items li{font-size:0.75rem;color:var(--text2);padding:0.25rem 0;padding-left:1rem;position:relative;line-height:1.5}
+.phase-items li::before{content:'\2192';position:absolute;left:0;color:var(--text3)}
+
+/* BALANCE LAB CYCLE */
+.balance-cycle{display:grid;grid-template-columns:repeat(5,1fr);gap:0.8rem;margin:2rem 0}
+.bc-step{text-align:center;padding:1.2rem 0.6rem;background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;position:relative;transition:all 0.4s}
+.bc-step:hover{border-color:rgba(245,166,35,0.3);transform:translateY(-3px)}
+.bc-icon{font-size:1.5rem;margin-bottom:0.5rem}
+.bc-day{font-family:'IBM Plex Mono',monospace;font-size:0.5rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem}
+.bc-title{font-weight:700;font-size:0.82rem;margin-bottom:0.3rem}
+.bc-desc{font-size:0.68rem;color:var(--text2);line-height:1.5}
+.bc-arrow{display:none;position:absolute;right:-0.6rem;top:50%;color:var(--text3);font-size:0.8rem;z-index:1}
+
+/* CONNECTION MAP */
+.conn-grid{display:grid;grid-template-columns:1fr 40px 1fr;gap:0;margin:2.5rem 0;align-items:stretch}
+.conn-left,.conn-right{display:flex;flex-direction:column;gap:0.6rem}
+.conn-item{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:0.9rem 1.1rem;transition:all 0.4s;flex:1}
+.conn-item:hover{border-color:rgba(68,102,255,0.3)}
+.conn-item h4{font-size:0.72rem;font-weight:600;margin-bottom:0.15rem}
+.conn-item p{font-size:0.65rem;color:var(--text2);line-height:1.45}
+.conn-arrows{display:flex;flex-direction:column;justify-content:space-around;align-items:center}
+.conn-arrow{color:var(--blue);font-size:1rem;opacity:0.4}
+
+/* COST */
+.cost-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem 0}
+.cost-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.3rem;text-align:center;transition:all 0.4s}
+.cost-card:hover{border-color:rgba(0,229,200,0.25);transform:translateY(-3px)}
+.cost-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;margin-bottom:0.2rem}
+.cost-lab{font-size:0.78rem;color:var(--text2)}
+.cost-note{font-family:'IBM Plex Mono',monospace;font-size:0.5rem;color:var(--text3);margin-top:0.4rem;text-transform:uppercase;letter-spacing:0.06em}
+
+/* SUCCESS */
+.success-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:2rem 0}
+.success-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem;transition:all 0.4s}
+.success-card:hover{border-color:rgba(68,102,255,0.25);transform:translateY(-3px)}
+.success-week{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.6rem}
+.success-card.w4 .success-week{color:var(--blue)}.success-card.w8 .success-week{color:var(--gold)}.success-card.w16 .success-week{color:var(--green)}
+.success-card li{font-size:0.75rem;color:var(--text2);margin-bottom:0.4rem;padding-left:0.8rem;position:relative;list-style:none;line-height:1.5}
+.success-card li::before{content:'\2022';position:absolute;left:0;color:var(--blue)}
+
+/* CALLOUT */
+.callout{background:linear-gradient(135deg,rgba(68,102,255,0.06) 0%,rgba(0,229,200,0.03) 100%);border:1px solid rgba(68,102,255,0.2);border-radius:14px;padding:1.5rem 1.8rem;margin:2rem 0}
+.callout p{color:var(--text2);font-size:0.88rem;line-height:1.7}
+.callout strong{color:var(--text)}
+.callout.gold{background:linear-gradient(135deg,rgba(245,166,35,0.06) 0%,rgba(255,51,102,0.03) 100%);border-color:rgba(245,166,35,0.25)}
+.callout.green{background:linear-gradient(135deg,rgba(0,229,200,0.06) 0%,rgba(68,102,255,0.03) 100%);border-color:rgba(0,229,200,0.25)}
+
+/* CTA */
+#cta{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cta-asks{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin:2rem 0;max-width:700px;text-align:left}
+.cta-ask{background:var(--bg2);border:1px solid rgba(68,102,255,0.2);border-radius:12px;padding:1.2rem;display:flex;gap:0.8rem;align-items:flex-start;transition:all 0.3s}
+.cta-ask:hover{border-color:rgba(68,102,255,0.4);transform:translateY(-2px)}
+.cta-num{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--blue);flex-shrink:0;width:28px}
+.cta-text{font-size:0.82rem;color:var(--text2);line-height:1.6}
+.cta-text strong{color:var(--text)}
+
+.footer{text-align:center;padding:3rem 2rem;border-top:1px solid rgba(255,255,255,0.04);color:var(--text3);font-size:0.7rem}
+
+@media(max-width:768px){
+section{padding:5rem 1.2rem 3rem}
+.problem-grid,.cost-grid,.success-row,.phases{grid-template-columns:1fr}
+.nodes-row,.balance-cycle{grid-template-columns:1fr}
+.conn-grid{grid-template-columns:1fr;gap:0.8rem}
+.conn-arrows{flex-direction:row;padding:0.5rem 0}
+.cta-asks{grid-template-columns:1fr}
+.card-roster{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+    <span class="nav-logo">Hero Squad Showdown</span>
+    <span class="nav-tag">Leadership Brief &mdash; Balance-First Approach</span>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section id="hero">
+    <div class="reveal">
+        <span class="kicker">Proposal for Pentagon Games Leadership</span>
+        <h1>Your cards exist.<br>Your balance data <span class="accent-pink">doesn't</span>.</h1>
+        <p class="sub">24 cards designed. Full stats. Full abilities. Full lore. Zero live matches. Put them in players' hands and let the data tell you what works.</p>
+        <div class="hero-stat-row">
+            <div class="hero-stat"><div class="hero-stat-val accent">24+</div><div class="hero-stat-lab">Cards Designed</div></div>
+            <div class="hero-stat"><div class="hero-stat-val accent-cyan">0</div><div class="hero-stat-lab">Matches Played</div></div>
+            <div class="hero-stat"><div class="hero-stat-val accent-gold">5-7</div><div class="hero-stat-lab">Days to Playable</div></div>
+            <div class="hero-stat"><div class="hero-stat-val accent-green">$0</div><div class="hero-stat-lab">New Budget</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== EXISTING CARDS ==================== -->
+<section>
+    <div class="reveal">
+        <span class="kicker">Your Card Design Bible</span>
+        <h1>These cards are <span class="accent-cyan">ready now</span></h1>
+        <p class="sub">Every card below has full stats, abilities, lore, and art direction. They go straight into the bot. No community redesign needed.</p>
+
+        <div class="card-roster">
+            <div class="roster-card btc"><div class="roster-name">Aiko</div><div class="roster-stats">6 cost &bull; 10 pwr</div><div class="roster-type">Bitcoin &bull; Legendary</div></div>
+            <div class="roster-card eth"><div class="roster-name">Ethan</div><div class="roster-stats">5 cost &bull; 6 pwr</div><div class="roster-type">Ethereum &bull; Legendary</div></div>
+            <div class="roster-card sol"><div class="roster-name">Nova</div><div class="roster-stats">3 cost &bull; 4 pwr</div><div class="roster-type">Solana &bull; Epic</div></div>
+            <div class="roster-card ada"><div class="roster-name">Marcus</div><div class="roster-stats">2 cost &bull; 2+ pwr</div><div class="roster-type">Cardano &bull; Epic</div></div>
+            <div class="roster-card poly"><div class="roster-name">Zara</div><div class="roster-stats">3 cost &bull; 3 pwr</div><div class="roster-type">Polygon &bull; Rare</div></div>
+            <div class="roster-card avax"><div class="roster-name">Frost</div><div class="roster-stats">4 cost &bull; 5 pwr</div><div class="roster-type">Avalanche &bull; Epic</div></div>
+            <div class="roster-card link"><div class="roster-name">Oracle</div><div class="roster-stats">3 cost &bull; 3 pwr</div><div class="roster-type">Chainlink &bull; Rare</div></div>
+            <div class="roster-card dot"><div class="roster-name">Unity</div><div class="roster-stats">4 cost &bull; 4 pwr</div><div class="roster-type">Polkadot &bull; Epic</div></div>
+            <div class="roster-card atom"><div class="roster-name">Voyager</div><div class="roster-stats">3 cost &bull; 3 pwr</div><div class="roster-type">Cosmos &bull; Rare</div></div>
+            <div class="roster-card base"><div class="roster-name">Foundation</div><div class="roster-stats">1 cost &bull; 2 pwr</div><div class="roster-type">Base &bull; Common</div></div>
+            <div class="roster-card nex"><div class="roster-name">Corruptor</div><div class="roster-stats">2 cost &bull; 3 pwr</div><div class="roster-type">Nexarch &bull; Common</div></div>
+            <div class="roster-card nex"><div class="roster-name">Void Spawn</div><div class="roster-stats">3 cost &bull; 4 pwr</div><div class="roster-type">Nexarch &bull; Rare</div></div>
+            <div class="roster-card nex"><div class="roster-name">Hive Cmdr</div><div class="roster-stats">4 cost &bull; 4 pwr</div><div class="roster-type">Nexarch &bull; Epic</div></div>
+            <div class="roster-card nex"><div class="roster-name">Obelith Muskl</div><div class="roster-stats">6 cost &bull; 8 pwr</div><div class="roster-type">Nexarch &bull; Legendary</div></div>
+            <div class="roster-card neutral"><div class="roster-name">Signal Boost</div><div class="roster-stats">1 cost &bull; 1 pwr</div><div class="roster-type">Foundation</div></div>
+            <div class="roster-card neutral"><div class="roster-name">Power Link</div><div class="roster-stats">2 cost &bull; 0 pwr</div><div class="roster-type">Foundation</div></div>
+            <div class="roster-card neutral"><div class="roster-name">Bitszen Reactor</div><div class="roster-stats">3 cost &bull; 2 pwr</div><div class="roster-type">Foundation &bull; Epic</div></div>
+            <div class="roster-card neutral"><div class="roster-name">Override</div><div class="roster-stats">1 cost &bull; 0 pwr</div><div class="roster-type">Protocol</div></div>
+            <div class="roster-card neutral"><div class="roster-name">Tac Retreat</div><div class="roster-stats">2 cost &bull; 0 pwr</div><div class="roster-type">Protocol &bull; Rare</div></div>
+            <div class="roster-card neutral"><div class="roster-name">All In</div><div class="roster-stats">3 cost &bull; 0 pwr</div><div class="roster-type">Protocol &bull; Epic</div></div>
+            <div class="roster-card neutral"><div class="roster-name">Shield Matrix</div><div class="roster-stats">1 cost</div><div class="roster-type">Artifact</div></div>
+            <div class="roster-card neutral"><div class="roster-name">Bitszen Core</div><div class="roster-stats">2 cost</div><div class="roster-type">Artifact &bull; Rare</div></div>
+            <div class="roster-card neutral"><div class="roster-name">Nexarch Shard</div><div class="roster-stats">3 cost</div><div class="roster-type">Artifact &bull; Epic</div></div>
+            <div class="roster-card neutral"><div class="roster-name">Genesis Frag</div><div class="roster-stats">4 cost</div><div class="roster-type">Artifact &bull; Legendary</div></div>
+        </div>
+
+        <div class="callout">
+            <p><strong>These are not placeholders.</strong> Every card has designed stats, abilities, chain affinity, keywords, and lore. They go directly into the bot as-is. The community's job is to <em>play them</em> and generate the data that tells you what to adjust.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== THE QUESTION ==================== -->
+<section>
+    <div class="reveal">
+        <span class="kicker">The Problem</span>
+        <h1>Good design is a <span class="accent-pink">hypothesis</span>.<br>Data is the <span class="accent-cyan">proof</span>.</h1>
+
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="problem-num">?</div>
+                <h3>Is Aiko at 10 Power too dominant?</h3>
+                <p>Does she win every Node she touches? Is 6 Bitzen the only viable late-game play? You designed her to be powerful &mdash; but is she <em>too</em> powerful?</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-num">?</div>
+                <h3>Does Hivemantle break the game?</h3>
+                <p>Obelith Muskl contributes +3 alone. That's instant Hivemantle 3 &mdash; Corruption spreads to adjacent Nodes. Does Nexarch Swarm dominate everything?</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-num">?</div>
+                <h3>Are Bonded pairs balanced?</h3>
+                <p>Ethan copies an ability AND Zara gets +2 Power. Nova auto-freezes AND Frost acts next. Do these combos create unbeatable two-card packages?</p>
+            </div>
+        </div>
+
+        <p class="sub" style="margin-top:1rem">You cannot answer these from documents. You answer them from <strong style="color:var(--text)">hundreds of matches</strong>. The Discord bot generates those matches.</p>
+    </div>
+</section>
+
+<!-- ==================== GAME SIM ==================== -->
+<section>
+    <div class="reveal">
+        <span class="kicker">HSS Lite</span>
+        <h1>Your cards, <span class="accent">playable in Discord</span></h1>
+        <p class="sub">A text-based bot implementing your exact GDD rules. No art needed. No app needed. 3-5 minute matches generating real balance data.</p>
+
+        <div class="game-sim">
+            <div class="sim-header">
+                <span class="sim-title">Live Match &mdash; Your Existing Cards</span>
+                <span class="sim-turn">Turn 3 of 6</span>
+                <span class="sim-bitzen">&#9889; 3 Bitzen</span>
+            </div>
+            <div class="nodes-row">
+                <div class="node-box revealed">
+                    <div class="node-name">Node 1: Genesis Core</div>
+                    <div class="node-modifier">+1 Bitzen when playing here</div>
+                    <div class="node-powers">
+                        <span class="node-power a">&#9650; Blue: 10</span>
+                        <span class="node-power b">&#9660; Red: 5</span>
+                    </div>
+                </div>
+                <div class="node-box revealed">
+                    <div class="node-name">Node 2: Corruption Pit</div>
+                    <div class="node-modifier">Heroes -1/turn. Nexarch +1/turn</div>
+                    <div class="node-powers">
+                        <span class="node-power a">&#9650; Blue: 3</span>
+                        <span class="node-power b">&#9660; Red: 7</span>
+                    </div>
+                </div>
+                <div class="node-box" style="border-color:rgba(245,166,35,0.3)">
+                    <div class="node-name">Node 3: Just Revealed!</div>
+                    <div class="node-modifier" style="color:var(--gold)">Neutral Zone &mdash; Pure Power</div>
+                    <div class="node-powers">
+                        <span class="node-power a">&#9650; Blue: 0</span>
+                        <span class="node-power b">&#9660; Red: 2</span>
+                    </div>
+                </div>
+            </div>
+            <h3 style="font-size:0.7rem;color:var(--text3);margin-bottom:0.6rem;font-family:'IBM Plex Mono',monospace;letter-spacing:0.1em;text-transform:uppercase">&#127183; Your Hand (via DM)</h3>
+            <div class="sim-cards">
+                <div class="sim-card"><span class="cost">6&#9889;</span><span class="name">Aiko</span><span class="power">10 PWR</span></div>
+                <div class="sim-card"><span class="cost">3&#9889;</span><span class="name">Oracle</span><span class="power">3 PWR</span></div>
+                <div class="sim-card"><span class="cost">2&#9889;</span><span class="name">Corruptor</span><span class="power">3 PWR</span></div>
+                <div class="sim-card"><span class="cost">1&#9889;</span><span class="name">Override</span><span class="power">0 PWR</span></div>
+                <div class="sim-card" style="opacity:0.35"><span class="cost">4&#9889;</span><span class="name">Unity</span><span class="power">4 PWR</span></div>
+                <div class="sim-card" style="border-color:rgba(0,229,200,0.3)"><span class="cost">1&#9889;</span><span class="name" style="color:var(--cyan)">+1 drawn!</span></div>
+            </div>
+            <div class="sim-controls">
+                <button class="sim-btn">/deploy Oracle 3</button>
+                <button class="sim-btn">/equip Shield Aiko</button>
+                <button class="sim-btn active">/done</button>
+                <button class="sim-btn sync-btn">/sync &#9889;</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== DATA TRACKING ==================== -->
+<section>
+    <div class="reveal">
+        <span class="kicker">Auto-Tracked Metrics</span>
+        <h1>Every match teaches you <span class="accent-gold">something</span></h1>
+        <p class="sub">The bot automatically tracks these metrics. No manual data collection. Just play and the insights appear.</p>
+
+        <div class="metrics-grid">
+            <div class="metric-item"><div class="metric-name">Win Rate / Card</div><div class="metric-desc">Which cards are over or underperforming</div><div class="metric-example">Aiko in deck = 62% win &rarr; tune down</div></div>
+            <div class="metric-item"><div class="metric-name">Win Rate / Deck</div><div class="metric-desc">Which archetypes dominate</div><div class="metric-example">Nexarch Swarm 58% &rarr; Hivemantle too strong</div></div>
+            <div class="metric-item"><div class="metric-name">Deploy Frequency</div><div class="metric-desc">Cards players use vs hold</div><div class="metric-example">Override played 23% &rarr; feels too weak</div></div>
+            <div class="metric-item"><div class="metric-name">Ability Triggers</div><div class="metric-desc">How often abilities actually fire</div><div class="metric-example">Nova double-action 48% &rarr; feels fair</div></div>
+            <div class="metric-item"><div class="metric-name">SYNC Usage</div><div class="metric-desc">How often players raise stakes</div><div class="metric-example">34% of matches &rarr; healthy range</div></div>
+            <div class="metric-item"><div class="metric-name">Bonded Pair Win%</div><div class="metric-desc">Whether paired heroes break the game</div><div class="metric-example">Ethan+Zara 71% &rarr; too strong together</div></div>
+            <div class="metric-item"><div class="metric-name">Node Impact</div><div class="metric-desc">Which locations distort outcomes</div><div class="metric-example">Corruption Pit Nexarch 73% &rarr; too swingy</div></div>
+            <div class="metric-item"><div class="metric-name">Dead Cards</div><div class="metric-desc">Cards that are never deployed</div><div class="metric-example">Power Link deployed 8% &rarr; needs rework</div></div>
+            <div class="metric-item"><div class="metric-name">Chain Affinity</div><div class="metric-desc">Pure chain vs mixed deck performance</div><div class="metric-example">Bitcoin 2+ in 71% &rarr; pure too dominant</div></div>
+            <div class="metric-item"><div class="metric-name">Match Duration</div><div class="metric-desc">Whether 3-5 min target holds</div><div class="metric-example">Average 4.2 min &rarr; on target</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== THREE PHASES ==================== -->
+<section>
+    <div class="reveal">
+        <span class="kicker">Approach</span>
+        <h1>Three phases,<br><span class="accent">not one</span></h1>
+        <p class="sub">Balance the foundation first. Then expand from confidence. Don't stack unknowns on unknowns.</p>
+
+        <div class="phases">
+            <div class="phase p1">
+                <span class="phase-tag">Phase 1 &mdash; Weeks 1-2</span>
+                <h3>Play</h3>
+                <p>Build the bot. Load existing 24+ cards. Open it. Let them play. Generate data.</p>
+                <ul class="phase-items">
+                    <li>Build bot with AI coding agent</li>
+                    <li>All 24 cards with designed stats</li>
+                    <li>4 pre-built deck templates</li>
+                    <li>Auto-track all balance metrics</li>
+                    <li>First 100+ matches</li>
+                </ul>
+            </div>
+            <div class="phase p2">
+                <span class="phase-tag">Phase 2 &mdash; Weeks 3-6</span>
+                <h3>Balance</h3>
+                <p>Weekly Balance Reports. Data-driven tuning. Community proposes, team decides.</p>
+                <ul class="phase-items">
+                    <li>Monday: auto Balance Report</li>
+                    <li>Discussion in #balance-lab</li>
+                    <li>Friday: team decides adjustments</li>
+                    <li>Weekend: updated cards go live</li>
+                    <li>Core roster stabilized by Week 6</li>
+                </ul>
+            </div>
+            <div class="phase p3">
+                <span class="phase-tag">Phase 3 &mdash; Weeks 7+</span>
+                <h3>Expand</h3>
+                <p>Core balanced. Now add new cards. Hero Creation concepts enter Card Lab.</p>
+                <ul class="phase-items">
+                    <li>Card Lab opens for new designs</li>
+                    <li>Hero Creation &rarr; Card Lab pipeline</li>
+                    <li>Deck building unlocked</li>
+                    <li>Weekly tournaments begin</li>
+                    <li>Community-designed cards finalized</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout gold">
+            <p><strong>Why this order:</strong> If you let the community design new cards before the existing roster is balanced, you're stacking unknowns on unknowns. Balance the foundation first. Then expand from a position of confidence.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== BALANCE LAB ==================== -->
+<section>
+    <div class="reveal">
+        <span class="kicker">Phase 2 Detail</span>
+        <h1>Balance Lab:<br><span class="accent-gold">the weekly cycle</span></h1>
+        <p class="sub">A data-driven tuning loop. The community plays and proposes. The team reviews and decides. Your designer's vision is refined, never replaced.</p>
+
+        <div class="balance-cycle">
+            <div class="bc-step"><div class="bc-icon">&#128202;</div><div class="bc-day">Monday</div><div class="bc-title">Balance Report</div><div class="bc-desc">Auto-generated from bot data. Top/bottom cards, deck rates, Node stats.</div></div>
+            <div class="bc-step"><div class="bc-icon">&#128172;</div><div class="bc-day">Tues&ndash;Thurs</div><div class="bc-title">Discussion</div><div class="bc-desc">Community proposes adjustments grounded in data, not opinions.</div></div>
+            <div class="bc-step"><div class="bc-icon">&#9878;&#65039;</div><div class="bc-day">Friday</div><div class="bc-title">Team Decides</div><div class="bc-desc">Reviews proposals against design intent. Selects adjustments.</div></div>
+            <div class="bc-step"><div class="bc-icon">&#128295;</div><div class="bc-day">Weekend</div><div class="bc-title">Patch Live</div><div class="bc-desc">Updated cards in bot. Tracking resets for changed cards.</div></div>
+            <div class="bc-step"><div class="bc-icon">&#128257;</div><div class="bc-day">Next Mon</div><div class="bc-title">Measure</div><div class="bc-desc">New report shows whether changes improved the metrics.</div></div>
+        </div>
+
+        <div class="callout green">
+            <p><strong>Creative control stays with the team.</strong> The community provides data and proposals. The team makes every balance decision. Cards carry the original designer's name. Balance contributors are credited separately in patch notes.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== CONNECTIONS ==================== -->
+<section>
+    <div class="reveal">
+        <span class="kicker">Nothing New</span>
+        <h1>Activates work<br><span class="accent-cyan">already done</span></h1>
+
+        <div class="conn-grid">
+            <div class="conn-left">
+                <div class="conn-item"><h4>Card Design Bible (24+ cards)</h4><p>Full stats, abilities, lore ready</p></div>
+                <div class="conn-item"><h4>Game Development Spec</h4><p>Complete rules and mechanics</p></div>
+                <div class="conn-item"><h4>Playtesting Framework</h4><p>Metrics already defined</p></div>
+                <div class="conn-item"><h4>Agent Design Bot Event</h4><p>Characters already being created</p></div>
+                <div class="conn-item"><h4>AI Bot Expertise</h4><p>Team already runs Discord bots</p></div>
+                <div class="conn-item"><h4>Economy Document</h4><p>Launch rewards defined</p></div>
+            </div>
+            <div class="conn-arrows"><span class="conn-arrow">&rarr;</span><span class="conn-arrow">&rarr;</span><span class="conn-arrow">&rarr;</span><span class="conn-arrow">&rarr;</span><span class="conn-arrow">&rarr;</span><span class="conn-arrow">&rarr;</span></div>
+            <div class="conn-right">
+                <div class="conn-item"><h4 class="accent">Cards go straight into bot</h4><p>No redesign. Designer's vision first.</p></div>
+                <div class="conn-item"><h4 class="accent">Bot implements exact GDD rules</h4><p>Staggered reveals, SYNC, Bitzen</p></div>
+                <div class="conn-item"><h4 class="accent">Bot auto-tracks every metric</h4><p>Zero manual data collection</p></div>
+                <div class="conn-item"><h4 class="accent">Characters become playable cards</h4><p>Two bots, one pipeline</p></div>
+                <div class="conn-item"><h4 class="accent">Same team builds the game bot</h4><p>Natural extension of capability</p></div>
+                <div class="conn-item"><h4 class="accent">Architect titles &rarr; launch rewards</h4><p>Contributors know what they earn</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== COST ==================== -->
+<section>
+    <div class="reveal">
+        <span class="kicker">Investment</span>
+        <h1>What this <span class="accent-cyan">costs</span></h1>
+
+        <div class="cost-grid">
+            <div class="cost-card"><div class="cost-val accent-green">$0-5</div><div class="cost-lab">Monthly hosting</div><div class="cost-note">Free tier handles it</div></div>
+            <div class="cost-card"><div class="cost-val accent">0</div><div class="cost-lab">New hires</div><div class="cost-note">Existing team + AI agent</div></div>
+            <div class="cost-card"><div class="cost-val accent-gold">1-2 hrs</div><div class="cost-lab">Team time / week</div><div class="cost-note">Review data, decide patches</div></div>
+            <div class="cost-card"><div class="cost-val accent-cyan">0</div><div class="cost-lab">Artist time (Phase 1-2)</div><div class="cost-note">Art starts Phase 3 only</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== SUCCESS ==================== -->
+<section>
+    <div class="reveal">
+        <span class="kicker">Outcomes</span>
+        <h1>What <span class="accent-gold">success</span> looks like</h1>
+
+        <div class="success-row">
+            <div class="success-card w4">
+                <div class="success-week">Week 4</div>
+                <ul>
+                    <li>200+ matches played</li>
+                    <li>Data for top 15 cards</li>
+                    <li>3+ balance adjustments made</li>
+                    <li>50+ active players</li>
+                    <li>Clear picture of what needs work</li>
+                </ul>
+            </div>
+            <div class="success-card w8">
+                <div class="success-week">Week 8</div>
+                <ul>
+                    <li>1,000+ matches</li>
+                    <li>All 24 cards balanced (45-55% win rate)</li>
+                    <li>Card Lab open for new cards</li>
+                    <li>Weekly tournaments running</li>
+                    <li>Confident launch card stats</li>
+                </ul>
+            </div>
+            <div class="success-card w16">
+                <div class="success-week">Week 16</div>
+                <ul>
+                    <li>5,000+ matches</li>
+                    <li>35+ cards, all playtested</li>
+                    <li>Ranked mode + tournament circuit</li>
+                    <li>400+ invested community members</li>
+                    <li>Launch set fully validated by data</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="callout">
+            <p><strong>The real outcome:</strong> When you build the mobile product, you ship a game that's balanced on Day 1. Because hundreds of people already proved it works.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== CTA ==================== -->
+<section id="cta">
+    <div class="reveal">
+        <span class="kicker">Decision</span>
+        <h1>Four things to <span class="accent">approve</span></h1>
+        <p class="sub" style="margin-left:auto;margin-right:auto">No budget. No hires. No artist time until Phase 3.</p>
+
+        <div class="cta-asks">
+            <div class="cta-ask"><div class="cta-num">1</div><div class="cta-text"><strong>Assign one team member</strong> to build HSS Lite with AI coding agent. All 24 existing cards loaded. 5-7 day build.</div></div>
+            <div class="cta-ask"><div class="cta-num">2</div><div class="cta-text"><strong>Add game channels</strong> to Discord: #bot-game, #match-results, #balance-lab, #playtest-reports.</div></div>
+            <div class="cta-ask"><div class="cta-num">3</div><div class="cta-text"><strong>Commit to weekly review</strong> of Balance Report starting Week 3. 1-2 hours/week team time.</div></div>
+            <div class="cta-ask"><div class="cta-num">4</div><div class="cta-text"><strong>Hold Card Lab</strong> for Phase 3 (~Week 7). Balance first, then expand.</div></div>
+        </div>
+
+        <div class="callout" style="max-width:620px;text-align:center;margin:2.5rem auto">
+            <p style="font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--text);font-weight:700;line-height:1.65">You designed 24 cards.<br>You wrote the rules.<br>You built the lore.<br><span style="color:var(--blue)">Now let players tell you if it works.</span></p>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <p>Hero Squad Showdown &mdash; HSS Lite + Balance Lab</p>
+    <p style="margin-top:0.3rem;font-size:0.6rem">Internal &bull; February 2026 &bull; Pentagon Games</p>
+</footer>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
