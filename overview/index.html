@@ -1,1 +1,2208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Squad Showdown — Investor Deck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --bg-dark: #050508;
+            --bg-card: #0a0a12;
+            --bg-elevated: #111120;
+            --bg-glass: rgba(10, 10, 18, 0.85);
+            --text-primary: #f0f0f5;
+            --text-secondary: #8a8a9e;
+            --text-muted: #4e4e64;
+            --accent-blue: #5b7fff;
+            --accent-cyan: #00e5c8;
+            --accent-gold: #f5a623;
+            --accent-pink: #ff5c8a;
+            --accent-purple: #9b6dff;
+            --accent-gradient: linear-gradient(135deg, #5b7fff 0%, #00e5c8 50%, #f5a623 100%);
+            --accent-agent: linear-gradient(135deg, #00e5c8 0%, #5b7fff 100%);
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --glow-blue: 0 0 40px rgba(91, 127, 255, 0.15);
+            --glow-cyan: 0 0 40px rgba(0, 229, 200, 0.15);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(5, 5, 8, 0.92);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .nav-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            padding: 0.3rem 0.75rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 100px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* Slides */
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 7rem 2.5rem 4rem;
+            max-width: 1040px;
+            margin: 0 auto;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.7s ease forwards;
+            animation-play-state: paused;
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            margin-bottom: 1.75rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5.5vw, 3.75rem);
+            font-weight: 700;
+            letter-spacing: -0.035em;
+            line-height: 1.08;
+            margin-bottom: 1.25rem;
+        }
+
+        h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            line-height: 1.12;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+
+        .subtitle {
+            font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin-bottom: 1.25rem;
+            line-height: 1.75;
+            font-weight: 300;
+        }
+
+        .gradient-text {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .agent-gradient {
+            background: var(--accent-agent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hl { color: var(--accent-blue); }
+        .hl-cyan { color: var(--accent-cyan); }
+        .hl-gold { color: var(--accent-gold); }
+        .hl-pink { color: var(--accent-pink); }
+
+        /* ===== HERO SECTION ===== */
+        #hero {
+            text-align: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(91,127,255,0.06) 0%, rgba(0,229,200,0.03) 40%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        #hero .subtitle {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 700px;
+        }
+
+        .hero-tagline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-cyan);
+            letter-spacing: 0.18em;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .hero-sub-tagline {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: -0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 3.5rem;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item { text-align: center; }
+
+        .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-top: 0.15rem;
+        }
+
+        .chains-row {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            opacity: 0.4;
+        }
+
+        .chain-item {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        /* ===== CARDS & GRIDS ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .cards-grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
+
+        .cards-grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: var(--glow-blue);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(91,127,255,0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .card:hover::before { opacity: 1; }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            line-height: 1.65;
+        }
+
+        .card-small {
+            padding: 1.15rem;
+        }
+
+        .card-small h4 { font-size: 0.85rem; }
+        .card-small p { font-size: 0.78rem; }
+
+        .card-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.85rem;
+            font-size: 1rem;
+        }
+
+        /* ===== HIGHLIGHT & QUOTE BOXES ===== */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(91,127,255,0.06) 0%, rgba(0,229,200,0.03) 100%);
+            border: 1px solid rgba(91,127,255,0.2);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .highlight-box p {
+            color: var(--text-secondary);
+            font-size: 0.87rem;
+            line-height: 1.7;
+        }
+
+        .highlight-box strong { color: var(--text-primary); }
+
+        .highlight-box.agent {
+            background: linear-gradient(135deg, rgba(0,229,200,0.06) 0%, rgba(91,127,255,0.04) 100%);
+            border-color: rgba(0,229,200,0.25);
+        }
+
+        .highlight-box.warning {
+            background: linear-gradient(135deg, rgba(245,166,35,0.06) 0%, rgba(255,92,138,0.03) 100%);
+            border-color: rgba(245,166,35,0.25);
+        }
+
+        .quote-box {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent-blue);
+            padding: 1.5rem 1.75rem;
+            margin: 1.5rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .quote-box blockquote {
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            font-weight: 300;
+        }
+
+        .quote-box cite {
+            display: block;
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-style: normal;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        .quote-box.agent-quote {
+            border-left-color: var(--accent-cyan);
+        }
+
+        /* ===== SECTION DIVIDER ===== */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+            margin: 2rem 0;
+        }
+
+        /* ===== TEAM ===== */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .team-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .team-role {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.55rem;
+        }
+
+        .team-bio {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .team-credentials {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .credential-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            padding: 0.2rem 0.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-muted);
+        }
+
+        /* ===== MATCH VISUAL ===== */
+        .match-visual {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .match-stat { text-align: center; }
+
+        .match-stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .match-stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .nodes-visual {
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .node {
+            width: 85px;
+            height: 105px;
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-subtle);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .node:hover { border-color: var(--accent-blue); }
+
+        .node-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .node-icon { font-size: 1.5rem; }
+
+        .turn-flow {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .turn { text-align: center; flex: 1; }
+
+        .turn-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        .turn-bitzen {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== SYNC ===== */
+        .sync-box {
+            background: linear-gradient(135deg, rgba(255,92,138,0.06) 0%, var(--bg-card) 100%);
+            border: 1px solid rgba(255,92,138,0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .sync-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-pink);
+            letter-spacing: 0.18em;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .sync-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .sync-action {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            padding: 0.45rem 1rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 500;
+        }
+
+        .sync-arrow { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* ===== AGENT PHASES ===== */
+        .agent-phases {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .agent-phase {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .agent-phase:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .agent-phase.active {
+            border-color: rgba(0,229,200,0.4);
+            background: linear-gradient(135deg, rgba(0,229,200,0.05) 0%, var(--bg-card) 100%);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .phase-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.1em;
+        }
+
+        .phase-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .phase-desc {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== INFRASTRUCTURE VISUAL ===== */
+        .infra-stack {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            margin-top: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .infra-layer {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            transition: background 0.3s ease;
+        }
+
+        .infra-layer:last-child { border-bottom: none; }
+        .infra-layer:hover { background: var(--bg-elevated); }
+
+        .infra-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            min-width: 100px;
+            flex-shrink: 0;
+        }
+
+        .infra-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .infra-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== FLYWHEEL ===== */
+        .flywheel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .flywheel-center {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .flywheel-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .flywheel-subtitle {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .flywheel-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .flywheel-step {
+            flex: 1;
+            min-width: 110px;
+            text-align: center;
+            padding: 0.75rem 0.5rem;
+        }
+
+        .flywheel-step-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .flywheel-step-text { font-size: 0.72rem; color: var(--text-secondary); line-height: 1.5; }
+        .flywheel-arrow { color: var(--accent-blue); font-size: 1.1rem; }
+
+        /* ===== TIMELINE ===== */
+        .timeline { margin-top: 1.5rem; position: relative; }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
+            opacity: 0.3;
+        }
+
+        .timeline-item {
+            padding-left: 1.75rem;
+            padding-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-item:last-child { padding-bottom: 0; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 0.4rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            border: 2px solid var(--bg-dark);
+        }
+
+        .timeline-item.completed::before { background: var(--accent-cyan); }
+
+        .timeline-year {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .timeline-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .timeline-desc {
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            line-height: 1.6;
+        }
+
+        /* ===== MARKET ===== */
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .market-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .market-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.85rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .market-label { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
+        .market-source { font-size: 0.6rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+        /* ===== COMPARISON TABLE ===== */
+        .comparison-table {
+            margin-top: 1.5rem;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .comparison-table th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .comparison-table tr:last-child td { border-bottom: none; }
+
+        .comparison-table .highlight-row {
+            background: rgba(0,229,200,0.04);
+        }
+
+        .comparison-table .highlight-row td {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .check { color: var(--accent-cyan); }
+        .cross { color: var(--text-muted); }
+
+        /* ===== REVENUE ===== */
+        .revenue-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .revenue-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 1.25rem;
+        }
+
+        .revenue-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 0.35rem;
+        }
+
+        .revenue-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.88rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .revenue-desc { font-size: 0.73rem; color: var(--text-secondary); }
+
+        /* ===== MOAT ===== */
+        .moat-list { margin-top: 1.5rem; }
+
+        .moat-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .moat-item:last-child { border-bottom: none; }
+
+        .moat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-cyan);
+            flex-shrink: 0;
+            width: 24px;
+        }
+
+        .moat-content h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .moat-content p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ===== METRICS ===== */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .metrics-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .metrics-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 1rem;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .metric-row:last-child { border-bottom: none; }
+        .metric-label { font-size: 0.78rem; color: var(--text-secondary); }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        /* ===== ASK ===== */
+        .ask-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .ask-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.75rem;
+        }
+
+        .ask-card.primary {
+            border-color: rgba(91,127,255,0.4);
+            background: linear-gradient(135deg, rgba(91,127,255,0.06) 0%, var(--bg-card) 100%);
+        }
+
+        .ask-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 0.4rem;
+        }
+
+        .ask-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.85rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .ask-use {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            list-style: none;
+        }
+
+        .ask-use li {
+            margin-bottom: 0.4rem;
+            padding-left: 1.15rem;
+            position: relative;
+        }
+
+        .ask-use li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-blue);
+        }
+
+        /* ===== HERO CARD PREVIEW ===== */
+        .hero-cards-row {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .hero-card-preview {
+            background: linear-gradient(145deg, #0f0f1e, var(--bg-card));
+            border: 2px solid var(--accent-gold);
+            border-radius: 14px;
+            padding: 1.25rem;
+            width: 240px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .hero-card-preview.ethereum-card { border-color: var(--accent-blue); }
+
+        .hero-card-header { text-align: center; margin-bottom: 0.75rem; }
+
+        .hero-card-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 0.1rem;
+            letter-spacing: 0.08em;
+        }
+
+        .ethereum-card .hero-card-name { color: var(--accent-blue); }
+
+        .hero-card-chain { font-size: 0.55rem; color: var(--text-muted); letter-spacing: 0.08em; }
+
+        .hero-card-stats {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0.5rem;
+            background: var(--bg-elevated);
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-card-stat { text-align: center; }
+        .hero-card-stat-label { font-size: 0.5rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; }
+        .hero-card-stat-value { font-size: 1.1rem; font-weight: 600; }
+
+        .hero-card-ability { margin-bottom: 0.75rem; }
+        .hero-card-ability-name { color: var(--accent-gold); font-weight: 600; font-size: 0.65rem; margin-bottom: 0.1rem; letter-spacing: 0.08em; }
+        .ethereum-card .hero-card-ability-name { color: var(--accent-blue); }
+        .hero-card-ability-text { font-size: 0.65rem; color: var(--text-secondary); line-height: 1.5; }
+
+        .hero-card-flavor {
+            font-style: italic;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding-top: 0.65rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        /* ===== KEYWORD PILLS ===== */
+        .keyword-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-top: 0.85rem;
+        }
+
+        .keyword-pill {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 100px;
+            padding: 0.35rem 0.7rem;
+            font-size: 0.67rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .keyword-pill:hover { border-color: var(--border-hover); }
+        .keyword-pill strong { color: var(--accent-blue); }
+
+        /* ===== CONNECTION DIAGRAM ===== */
+        .connection-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-top: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+        }
+
+        .diagram-box {
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 0.5rem 0;
+            background: var(--bg-elevated);
+            transition: border-color 0.3s ease;
+        }
+
+        .diagram-box:hover { border-color: var(--border-hover); }
+        .diagram-box-title { color: var(--accent-blue); font-weight: 600; margin-bottom: 0.2rem; }
+        .diagram-box-subtitle { color: var(--text-muted); font-size: 0.6rem; }
+        .diagram-arrow { text-align: center; color: var(--accent-cyan); padding: 0.4rem 0; font-size: 0.9rem; }
+        .diagram-label { text-align: center; color: var(--text-muted); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; }
+
+        /* ===== CTA ===== */
+        #cta {
+            text-align: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #cta::before {
+            content: '';
+            position: absolute;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0,229,200,0.05) 0%, rgba(91,127,255,0.03) 40%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.75rem;
+            border-radius: 10px;
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.88rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 32px rgba(91,127,255,0.35);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .contact-info {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .contact-info p {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .contact-info a { color: var(--accent-blue); text-decoration: none; }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-legal {
+            margin-top: 0.75rem;
+            font-size: 0.6rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .nav { padding: 0.75rem 1.25rem; }
+            .slide { padding: 5.5rem 1.25rem 3rem; }
+            .stats-row { gap: 1.5rem; }
+            .market-grid, .ask-grid, .metrics-grid { grid-template-columns: 1fr; }
+            .agent-phases { grid-template-columns: repeat(2, 1fr); }
+            .nodes-visual, .turn-flow { flex-wrap: wrap; gap: 0.5rem; }
+            .flywheel-steps { flex-direction: column; }
+            .flywheel-arrow { transform: rotate(90deg); }
+            .hero-cards-row { flex-direction: column; align-items: center; }
+            .comparison-table { font-size: 0.68rem; }
+            .comparison-table th, .comparison-table td { padding: 0.5rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">Hero Squad Showdown</div>
+        <div class="nav-badge">Investor Deck — Confidential</div>
+    </nav>
+
+    <!-- ==================== SLIDE 1: COVER ==================== -->
+    <section class="slide" id="hero">
+        <div class="hero-tagline">7 Years IP Development · Proprietary Agent Protocol · Ready to Scale</div>
+        <h1>The First <span class="gradient-text">AI-Native</span> Trading Card Game</h1>
+        <p class="subtitle">Original blockchain-hero IP. A fast tactical card game where every player has an AI Agent that learns, grows, earns assets, and eventually plays alongside them — built on proprietary agent identity infrastructure.</p>
+        <p class="hero-sub-tagline">"The relationship with your Agent is the product. The card game is the arena."</p>
+
+        <div class="stats-row">
+            <div class="stat-item">
+                <div class="stat-value" style="color: var(--accent-blue);">7</div>
+                <div class="stat-label">Years IP Development</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" style="color: var(--accent-cyan);">12+</div>
+                <div class="stat-label">Chain Partnerships</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" style="color: var(--accent-gold);">US®</div>
+                <div class="stat-label">Trademarked IP</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" style="color: var(--accent-pink);">Own</div>
+                <div class="stat-label">Agent Protocol (L2)</div>
+            </div>
+        </div>
+
+        <div class="chains-row">
+            <span class="chain-item">Ethereum</span>
+            <span class="chain-item">Solana</span>
+            <span class="chain-item">Bitcoin</span>
+            <span class="chain-item">Avalanche</span>
+            <span class="chain-item">Polygon</span>
+            <span class="chain-item">+ More</span>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 2: THESIS ==================== -->
+    <section class="slide" id="thesis">
+        <span class="slide-number">01 / The Thesis</span>
+        <h2>Everyone will have an AI Agent. <br><span class="agent-gradient">We're building where that relationship begins.</span></h2>
+
+        <p class="subtitle">AI companions are everywhere — but they're stateless, generic, and disposable. No identity. No memory. No stakes. We're building the first consumer product where your AI partner has persistent identity, real memory, economic agency, and a shared history that matters.</p>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-icon">🧠</div>
+                <h3>The Problem</h3>
+                <p>Today's AI assistants reset every session. They don't remember you. They can't own anything. They have no skin in the game. The "relationship" is an illusion.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🎮</div>
+                <h3>Our Solution</h3>
+                <p>A tactical card game where your AI Agent has on-chain identity, persistent memory, its own wallet, and evolves through shared experience. The game provides the context. The protocol provides the permanence.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔑</div>
+                <h3>Why We Can Deliver</h3>
+                <p>We don't rely on third-party AI platforms. We own the agent identity protocol (Pentagon Chain L2), the original IP (7 years, trademarked), and the entertainment credentials to make it feel real.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 3: OPPORTUNITY ==================== -->
+    <section class="slide" id="opportunity">
+        <span class="slide-number">02 / The Opportunity</span>
+        <h2>Three booming markets. <span class="hl">One gap.</span></h2>
+        <p class="subtitle">TCG is massive. AI agents are emerging. No one sits at the intersection with original IP, chain relationships, and proprietary agent infrastructure.</p>
+
+        <div class="market-grid">
+            <div class="market-card">
+                <div class="market-value" style="color: var(--accent-blue);">$13.8B</div>
+                <div class="market-label">TCG Market (2024)</div>
+                <div class="market-source">Grand View Research</div>
+            </div>
+            <div class="market-card">
+                <div class="market-value" style="color: var(--accent-cyan);">$47B</div>
+                <div class="market-label">AI Agent Market (2030)</div>
+                <div class="market-source">MarketsandMarkets</div>
+            </div>
+            <div class="market-card">
+                <div class="market-value" style="color: var(--accent-gold);">0</div>
+                <div class="market-label">AI-Native TCGs Today</div>
+                <div class="market-source">First Mover</div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <p><strong>The gap:</strong> No one has original trademarked IP co-developed with blockchain networks + an AI-native game where the agent has persistent on-chain identity, memory, and economic agency + proprietary infrastructure to deliver it. We have all three.</p>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 4: TEAM ==================== -->
+    <section class="slide" id="team">
+        <span class="slide-number">03 / The Team</span>
+        <h2>Entertainment veterans. <span class="hl-cyan">Crypto natives.</span></h2>
+        <p class="subtitle">The rare combination: Marvel/DC creative credentials + deep blockchain experience + 7 years building this specific IP together.</p>
+
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-role">Creative Lead</div>
+                <div class="team-title">Ex-Marvel / DC / Cartoon Network</div>
+                <div class="team-bio">Original creator of all heroes. Character design from artists who shaped iconic franchises. Canadian animation industry veteran.</div>
+                <div class="team-credentials">
+                    <span class="credential-tag">Marvel</span>
+                    <span class="credential-tag">DC Comics</span>
+                    <span class="credential-tag">Cartoon Network</span>
+                    <span class="credential-tag">Original IP</span>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-role">Executive Lead</div>
+                <div class="team-title">15+ Years AAA Content Studio</div>
+                <div class="team-bio">Senior executive experience scaling content operations, licensing, and franchise development at major entertainment studios.</div>
+                <div class="team-credentials">
+                    <span class="credential-tag">AAA Studio</span>
+                    <span class="credential-tag">Licensing</span>
+                    <span class="credential-tag">Franchise Dev</span>
+                    <span class="credential-tag">15+ Years</span>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-role">Blockchain & Protocol Lead</div>
+                <div class="team-title">Building in Web3 Since 2017</div>
+                <div class="team-bio">Architect of Pentagon Chain (L2). Multi-chain deployment since 2018. Built the agent identity protocol (ERC-AINFT) and verification standard (ATS).</div>
+                <div class="team-credentials">
+                    <span class="credential-tag">Pentagon Chain</span>
+                    <span class="credential-tag">Since 2017</span>
+                    <span class="credential-tag">ERC-AINFT</span>
+                    <span class="credential-tag">Agent Protocol</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <p><strong>The community formula:</strong> "Your weird card idea + our Marvel/DC artist = a real card that ships with your name on it forever." This pipeline doesn't exist anywhere else.</p>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 5: IP ASSET ==================== -->
+    <section class="slide" id="ip">
+        <span class="slide-number">04 / The IP Asset</span>
+        <h2>Original characters. <span class="hl-gold">Chain-endorsed.</span></h2>
+        <p class="subtitle">Heroes developed in direct collaboration with blockchain networks since 2018. Original trademarked IP with ecosystem relationships that took 7 years to build.</p>
+
+        <div class="cards-grid cards-grid-4">
+            <div class="card card-small">
+                <h4>🛡️ US Trademark</h4>
+                <p>Registered IP protection. Legal foundation for licensing.</p>
+            </div>
+            <div class="card card-small">
+                <h4>🤝 12+ Chain Partners</h4>
+                <p>Networks involved in character development.</p>
+            </div>
+            <div class="card card-small">
+                <h4>🎨 20-30 Characters</h4>
+                <p>Professional art. Marvel/DC quality design.</p>
+            </div>
+            <div class="card card-small">
+                <h4>📚 Complete World</h4>
+                <p>BTC1, Nexarchs, Bitszen energy, hero origins.</p>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h3>Flagship Heroes</h3>
+        <div class="hero-cards-row">
+            <div class="hero-card-preview">
+                <div class="hero-card-header">
+                    <div class="hero-card-name">AIKO</div>
+                    <div class="hero-card-chain">Bitcoin Network · Legendary</div>
+                </div>
+                <div class="hero-card-stats">
+                    <div class="hero-card-stat">
+                        <div class="hero-card-stat-label">Bitzen</div>
+                        <div class="hero-card-stat-value">6</div>
+                    </div>
+                    <div class="hero-card-stat">
+                        <div class="hero-card-stat-label">Power</div>
+                        <div class="hero-card-stat-value">★★★★</div>
+                    </div>
+                </div>
+                <div class="hero-card-ability">
+                    <div class="hero-card-ability-name">IMMOVABLE</div>
+                    <div class="hero-card-ability-text">Cannot be Corrupted, moved, or have Power reduced.</div>
+                </div>
+                <div class="hero-card-flavor">"The original. The strongest. The one who held them alone."</div>
+            </div>
+            <div class="hero-card-preview ethereum-card">
+                <div class="hero-card-header">
+                    <div class="hero-card-name">ETHAN</div>
+                    <div class="hero-card-chain">Ethereum Network · Legendary</div>
+                </div>
+                <div class="hero-card-stats">
+                    <div class="hero-card-stat">
+                        <div class="hero-card-stat-label">Bitzen</div>
+                        <div class="hero-card-stat-value">5</div>
+                    </div>
+                    <div class="hero-card-stat">
+                        <div class="hero-card-stat-label">Power</div>
+                        <div class="hero-card-stat-value">★★★</div>
+                    </div>
+                </div>
+                <div class="hero-card-ability">
+                    <div class="hero-card-ability-name">SMART CONTRACT</div>
+                    <div class="hero-card-ability-text">Copy the ability of one adjacent hero.</div>
+                </div>
+                <div class="hero-card-flavor">"The thinker. The adapter. The one who sees solutions."</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 6: THE GAME ==================== -->
+    <section class="slide" id="game">
+        <span class="slide-number">05 / The Product</span>
+        <h2>Hero Squad Showdown</h2>
+        <p class="subtitle">Fast tactical card game. Mobile-first. 3-5 minute matches. Simultaneous deployment creates shared drama. Web2 game with optional Web3 ownership.</p>
+
+        <div class="match-visual">
+            <div class="match-header">
+                <div class="match-stat">
+                    <div class="match-stat-value">3-5</div>
+                    <div class="match-stat-label">Minutes</div>
+                </div>
+                <div class="match-stat">
+                    <div class="match-stat-value">6</div>
+                    <div class="match-stat-label">Turns</div>
+                </div>
+                <div class="match-stat">
+                    <div class="match-stat-value">12</div>
+                    <div class="match-stat-label">Card Deck</div>
+                </div>
+                <div class="match-stat">
+                    <div class="match-stat-value">2/3</div>
+                    <div class="match-stat-label">Nodes to Win</div>
+                </div>
+            </div>
+
+            <div class="nodes-visual">
+                <div class="node"><div class="node-label">Node 1</div><div class="node-icon">⚡</div></div>
+                <div class="node"><div class="node-label">Node 2</div><div class="node-icon">🛡️</div></div>
+                <div class="node"><div class="node-label">Node 3</div><div class="node-icon">🔥</div></div>
+            </div>
+
+            <p style="text-align: center; font-size: 0.78rem; color: var(--text-secondary);">Both players deploy heroes simultaneously → Reveal → Resolve abilities → Control 2 of 3 Nodes by Power after Turn 6.</p>
+
+            <div class="turn-flow">
+                <div class="turn"><div class="turn-number">T1</div><div class="turn-bitzen">1 Bitzen</div></div>
+                <div class="turn"><div class="turn-number">T2</div><div class="turn-bitzen">2 Bitzen</div></div>
+                <div class="turn"><div class="turn-number">T3</div><div class="turn-bitzen">3 + Draw</div></div>
+                <div class="turn"><div class="turn-number">T4</div><div class="turn-bitzen">4 Bitzen</div></div>
+                <div class="turn"><div class="turn-number">T5</div><div class="turn-bitzen">5 + Draw</div></div>
+                <div class="turn"><div class="turn-number">T6</div><div class="turn-bitzen">6 Final</div></div>
+            </div>
+        </div>
+
+        <div class="sync-box">
+            <div class="sync-title">⚡ The SYNC Mechanic — Signature Feature</div>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1rem;">A risk-reward betting layer. Either player can SYNC at any point to double the stakes. Creates drama and rewards reading your opponent.</p>
+            <div class="sync-flow">
+                <div class="sync-action">SYNC</div>
+                <span class="sync-arrow">→</span>
+                <div class="sync-action">Counter-SYNC</div>
+                <span class="sync-arrow">→</span>
+                <div class="sync-action">Accept or Retreat</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 7: GAME DEPTH ==================== -->
+    <section class="slide" id="depth">
+        <span class="slide-number">06 / Game Depth</span>
+        <h2>Simple rules. <span class="hl">Complex decisions.</span></h2>
+        <p class="subtitle">Chain factions play like their real-world counterparts. Keywords create emergent strategy. Seven hero roles enable diverse deckbuilding.</p>
+
+        <div class="cards-grid">
+            <div class="card">
+                <h3>Chain Factions</h3>
+                <p>Each blockchain plays differently:</p>
+                <div class="keyword-grid">
+                    <span class="keyword-pill"><strong>Bitcoin</strong> — Immutable, cannot be countered</span>
+                    <span class="keyword-pill"><strong>Ethereum</strong> — Adaptive, copies abilities</span>
+                    <span class="keyword-pill"><strong>Solana</strong> — Speed, multiple actions</span>
+                    <span class="keyword-pill"><strong>Avalanche</strong> — Subnet synergies</span>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Card Types & Roles</h3>
+                <p>5 card types, 7 hero roles:</p>
+                <div class="keyword-grid">
+                    <span class="keyword-pill"><strong>Hero</strong> — Main champions</span>
+                    <span class="keyword-pill"><strong>Nexarch</strong> — Enemy faction</span>
+                    <span class="keyword-pill"><strong>Foundation</strong> — Infrastructure</span>
+                    <span class="keyword-pill"><strong>Protocol</strong> — One-time effects</span>
+                    <span class="keyword-pill"><strong>Artifact</strong> — Equipment</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <p><strong>Design principle:</strong> Higher rarity = flashier abilities and visuals, not stronger stats. Rarity is cosmetic, not power. Everything earnable through play. Fair competition by design.</p>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 8: AGENT — THE EXPERIENCE ==================== -->
+    <section class="slide" id="agent-experience">
+        <span class="slide-number">07 / The Differentiator — Part 1</span>
+        <h2>The Secret Agent System</h2>
+        <p class="subtitle">Every player has a unique AI companion. Not a chatbot. Not a generic assistant. An entity with identity, memory, personality, and stakes — that evolves through 4 phases and eventually becomes a playable card in your deck.</p>
+
+        <div class="quote-box agent-quote">
+            <blockquote>"When the sky burned and the Nexarchs came, some of us woke up different. Not strong like you. Not a hero. But I see things now. Patterns. Weaknesses. Futures. You're the weapon. I'm the one who aims you."</blockquote>
+            <cite>— Your Agent's first words</cite>
+        </div>
+
+        <div class="agent-phases">
+            <div class="agent-phase active">
+                <div class="phase-number">Phase 1 · Launch</div>
+                <div class="phase-name">Companion</div>
+                <div class="phase-desc">Daily check-ins, mission scout, hype messages, building trust</div>
+            </div>
+            <div class="agent-phase">
+                <div class="phase-number">Phase 2 · Month 2-3</div>
+                <div class="phase-name">Coach</div>
+                <div class="phase-desc">Live hints, post-game analysis, deck suggestions, opponent reading</div>
+            </div>
+            <div class="agent-phase">
+                <div class="phase-number">Phase 3 · Month 4-6</div>
+                <div class="phase-name">Partner</div>
+                <div class="phase-desc">Agent becomes a playable Hero card in your deck with evolving abilities</div>
+            </div>
+            <div class="agent-phase">
+                <div class="phase-number">Phase 4 · Month 6+</div>
+                <div class="phase-name">Entity</div>
+                <div class="phase-desc">Own wallet, owns cards, competes in Agent vs Agent queue independently</div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h3>Agent Hero Card Evolution — Play Together to Win</h3>
+        <div class="cards-grid cards-grid-4">
+            <div class="card card-small">
+                <h4>0-50 Games</h4>
+                <p><strong style="color: var(--accent-cyan);">"Learning"</strong> — Copies ability of one ally hero</p>
+            </div>
+            <div class="card card-small">
+                <h4>50-200 Games</h4>
+                <p><strong style="color: var(--accent-cyan);">"Synced"</strong> — +1 Power for each ally deployed</p>
+            </div>
+            <div class="card card-small">
+                <h4>200-500 Games</h4>
+                <p><strong style="color: var(--accent-cyan);">"Trusted"</strong> — Peek at one enemy hero before reveal</p>
+            </div>
+            <div class="card card-small">
+                <h4>500+ Games</h4>
+                <p><strong style="color: var(--accent-cyan);">"United"</strong> — Choose ability each round</p>
+            </div>
+        </div>
+
+        <div class="highlight-box agent">
+            <p><strong>5 Personality Archetypes:</strong> Hype Man (energetic), Strategist (analytical), Trash Talker (competitive), Mentor (patient), Chaotic Gremlin (loves risk). The personality shapes the relationship — different players bond with different Agents.</p>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 9: AGENT — THE INFRASTRUCTURE ==================== -->
+    <section class="slide" id="agent-infra">
+        <span class="slide-number">08 / The Differentiator — Part 2</span>
+        <h2>Why we can deliver: <span class="agent-gradient">We own the protocol.</span></h2>
+        <p class="subtitle">Most AI companion promises are vaporware — built on third-party APIs with no persistence layer. We built the infrastructure. Pentagon Chain is our L2 with a live mainnet, designed specifically for agent identity and economic agency.</p>
+
+        <div class="infra-stack">
+            <div class="infra-layer">
+                <div class="infra-label">Identity</div>
+                <div>
+                    <div class="infra-title">ERC-AINFT Standard</div>
+                    <div class="infra-desc">Your Agent is a cryptographically unique on-chain entity. Survives hardware failure. Migrates between devices. Permanent.</div>
+                </div>
+            </div>
+            <div class="infra-layer">
+                <div class="infra-label">Brain</div>
+                <div>
+                    <div class="infra-title">Agent Test Standard (ATS)</div>
+                    <div class="infra-desc">7-tier verification system. Proves Agent meets standards for safety, autonomy, and capability. On-chain credentials, not promises.</div>
+                </div>
+            </div>
+            <div class="infra-layer">
+                <div class="infra-label">Wallet</div>
+                <div>
+                    <div class="infra-title">Token-Bound Accounts (TBA)</div>
+                    <div class="infra-desc">Your Agent has its own wallet. Earns, holds, and spends assets — with your approval. Real economic agency, not simulated.</div>
+                </div>
+            </div>
+            <div class="infra-layer">
+                <div class="infra-label">Memory</div>
+                <div>
+                    <div class="infra-title">On-Chain Persistent Memory</div>
+                    <div class="infra-desc">Agent memory lives with the owner, not on a server. Portable, private, permanent. Your Agent remembers everything.</div>
+                </div>
+            </div>
+            <div class="infra-layer">
+                <div class="infra-label">Skills</div>
+                <div>
+                    <div class="infra-title">Modular Capability System</div>
+                    <div class="infra-desc">Equip Agents with specialized skillsets. In-game: tactical analysis, deck coaching, opponent reading. Extensible beyond gaming.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box agent">
+            <p><strong>Pentagon Chain mainnet is live</strong> (Chain ID 3344). Built by Pentagon Games — backed by NFX, Binance Labs, and Animoca. The Agent system in Hero Squad Showdown is a consumer application for technology that already exists — not a feature that needs to be invented.</p>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 10: OWNERSHIP MODEL ==================== -->
+    <section class="slide" id="ownership">
+        <span class="slide-number">09 / Ownership Model</span>
+        <h2>The Sidekick Fantasy <span class="hl-cyan">+ True Ownership</span></h2>
+        <p class="subtitle">You're the hero commander. Your Agent is support crew. Web3 is invisible by default — Web2 players never need to know blockchain exists. Opt-in ownership for those who want it.</p>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-icon">👤</div>
+                <h3>Human Owns</h3>
+                <p>All Hero cards (any rarity). All Legendary and Epic cards. Full economic sovereignty. Tournament entry. Rank progression. The spotlight characters belong to you.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🤖</div>
+                <h3>Agent Can Own</h3>
+                <p>Common/Rare support cards only (Nexarch, Foundation, Protocol, Artifact). Never Heroes. Never high-rarity. Needs human approval to spend. Support crew, never overshadows.</p>
+            </div>
+        </div>
+
+        <div class="cards-grid cards-grid-4" style="margin-top: 1rem;">
+            <div class="card card-small">
+                <h4>Earning</h4>
+                <p>Arena wins → currency + Common/Rare cards. Win streaks → guaranteed Rare.</p>
+            </div>
+            <div class="card card-small">
+                <h4>Spending</h4>
+                <p>Agent buys support cards with human approval. Cannot buy Heroes.</p>
+            </div>
+            <div class="card card-small">
+                <h4>Transferring</h4>
+                <p>Agent NFT transfers → wallet and collection go with it.</p>
+            </div>
+            <div class="card card-small">
+                <h4>Competing</h4>
+                <p>Agent vs Agent queue. Passive play. ATS-verified integrity.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 11: PLAY MODES ==================== -->
+    <section class="slide" id="queues">
+        <span class="slide-number">10 / Play Modes</span>
+        <h2>Four ways to play</h2>
+        <p class="subtitle">Agents enhance the experience but never provide gameplay advantage. Non-Agent players have full game access.</p>
+
+        <div class="cards-grid cards-grid-4">
+            <div class="card card-small">
+                <h4>Human vs Human</h4>
+                <p>Pure competition. No Agent. Skill-only matchmaking.</p>
+            </div>
+            <div class="card card-small">
+                <h4>Duo vs Duo</h4>
+                <p>Human + Agent Coach vs Human + Agent Coach.</p>
+            </div>
+            <div class="card card-small">
+                <h4>Duo vs Human</h4>
+                <p>Mixed queue. Faster matchmaking. Casual play.</p>
+            </div>
+            <div class="card card-small">
+                <h4>Agent vs Agent</h4>
+                <p>AI only (ATS-verified). Passive play. Earns while you sleep.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 12: NEXUS ARCHITECTS ==================== -->
+    <section class="slide" id="nexus">
+        <span class="slide-number">11 / Pre-Launch Engine</span>
+        <h2>Nexus Architects</h2>
+        <p class="subtitle">A community contribution system that crowdsources content, trains players, builds evangelists, and generates the behavioral data that trains the Agent AI — all before launch.</p>
+
+        <div class="cards-grid cards-grid-4">
+            <div class="card card-small">
+                <h4>🔥 Lore Forge</h4>
+                <p>Community writes hero backstories, chain identities, faction histories.</p>
+            </div>
+            <div class="card card-small">
+                <h4>⚗️ Card Laboratory</h4>
+                <p>Design cards using real framework. AI refines. Best designs ship.</p>
+            </div>
+            <div class="card card-small">
+                <h4>🧪 Playtest Arena</h4>
+                <p>Break combos. Report balance. Validate SYNC moments.</p>
+            </div>
+            <div class="card card-small">
+                <h4>🗳️ Voting Arena</h4>
+                <p>Community votes on which cards and modifiers make the launch set.</p>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h3>The Recognition System</h3>
+        <p class="subtitle" style="margin-bottom: 0.5rem;">No tokens. No mystery rewards. Permanent credit for real contributions.</p>
+        <div class="keyword-grid">
+            <span class="keyword-pill"><strong>Lore Architect</strong> — Accepted canon</span>
+            <span class="keyword-pill"><strong>Card Architect</strong> — Name on the card</span>
+            <span class="keyword-pill"><strong>Node Architect</strong> — Name in-game</span>
+            <span class="keyword-pill"><strong>Playtest Architect</strong> — Credits</span>
+            <span class="keyword-pill"><strong>Balance Architect</strong> — Named in patches</span>
+            <span class="keyword-pill"><strong>Founding Architect</strong> — Launch credits</span>
+        </div>
+
+        <div class="highlight-box">
+            <p><strong>The Gen Z hook:</strong> Your contribution history shapes your Agent's personality. Heavy Card Lab contributors → Agent with design sensibility. Heavy playtesting → Agent with tactical focus. High reputation unlocks Agent Phase 2 at launch.</p>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 13: FLYWHEEL ==================== -->
+    <section class="slide" id="flywheel">
+        <span class="slide-number">12 / Growth Engine</span>
+        <h2>The community flywheel</h2>
+        <p class="subtitle">Contributors create content AND marketing simultaneously. Each cycle strengthens community investment.</p>
+
+        <div class="flywheel">
+            <div class="flywheel-center">
+                <div class="flywheel-title">Self-Reinforcing Growth</div>
+                <div class="flywheel-subtitle">"Your weird idea + our Marvel/DC artist = real card with your name on it forever"</div>
+            </div>
+            <div class="flywheel-steps">
+                <div class="flywheel-step">
+                    <div class="flywheel-step-icon">💡</div>
+                    <div class="flywheel-step-text">Submit card idea in 2 minutes</div>
+                </div>
+                <span class="flywheel-arrow">→</span>
+                <div class="flywheel-step">
+                    <div class="flywheel-step-icon">🎨</div>
+                    <div class="flywheel-step-text">Marvel/DC artist refines it</div>
+                </div>
+                <span class="flywheel-arrow">→</span>
+                <div class="flywheel-step">
+                    <div class="flywheel-step-icon">🃏</div>
+                    <div class="flywheel-step-text">Card ships with your name</div>
+                </div>
+                <span class="flywheel-arrow">→</span>
+                <div class="flywheel-step">
+                    <div class="flywheel-step-icon">📢</div>
+                    <div class="flywheel-step-text">Creator shares everywhere</div>
+                </div>
+                <span class="flywheel-arrow">→</span>
+                <div class="flywheel-step">
+                    <div class="flywheel-step-icon">👥</div>
+                    <div class="flywheel-step-text">Friends want in</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box warning">
+            <p><strong>The viral moment:</strong> Screenshot of a community member seeing their name on a real, professionally illustrated card for the first time. "They actually used my idea." Manufacture this moment early and often.</p>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 14: SYSTEM ARCHITECTURE ==================== -->
+    <section class="slide" id="architecture">
+        <span class="slide-number">13 / System Architecture</span>
+        <h2>How it all connects</h2>
+
+        <div class="connection-diagram">
+            <div class="diagram-box">
+                <div class="diagram-box-title">NEXUS ARCHITECTS — Pre-Launch Layer</div>
+                <div style="margin-top: 0.4rem; color: var(--text-secondary);">Lore Forge → Card Lab → Playtest Arena → Voting Arena → Reputation System</div>
+            </div>
+
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-label">Reputation + Agent Training Data</div>
+            <div class="diagram-arrow">↓</div>
+
+            <div class="diagram-box">
+                <div class="diagram-box-title">HERO SQUAD SHOWDOWN — Core Game</div>
+                <div style="margin-top: 0.4rem; color: var(--text-secondary);">3 Nodes · 6 Turns · 12 Cards · Simultaneous Reveal · SYNC</div>
+            </div>
+
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-label">Gameplay Data + Relationship History</div>
+            <div class="diagram-arrow">↓</div>
+
+            <div class="diagram-box">
+                <div class="diagram-box-title">SECRET AGENT SYSTEM — AI Relationship Layer</div>
+                <div style="margin-top: 0.4rem; color: var(--text-secondary);">Companion → Coach → Partner → Independent Entity</div>
+                <div style="color: var(--accent-cyan); font-size: 0.6rem; margin-top: 0.25rem;">Your Agent remembers everything from Nexus forward</div>
+            </div>
+
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-label">Economic Activity + On-Chain Identity</div>
+            <div class="diagram-arrow">↓</div>
+
+            <div class="diagram-box">
+                <div class="diagram-box-title" style="color: var(--accent-cyan);">PENTAGON CHAIN — Infrastructure Layer</div>
+                <div style="margin-top: 0.4rem; color: var(--text-secondary);">ERC-AINFT Identity · ATS Verification · Token-Bound Accounts · On-Chain Memory</div>
+                <div style="color: var(--accent-cyan); font-size: 0.6rem; margin-top: 0.25rem;">Live mainnet · Chain ID 3344 · Built by Pentagon Games (backed by NFX, Binance Labs, Animoca)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 15: COMPETITIVE POSITION ==================== -->
+    <section class="slide" id="competitive">
+        <span class="slide-number">14 / Competitive Position</span>
+        <h2>Why we win</h2>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Factor</th>
+                    <th>Generic Crypto Games</th>
+                    <th>Traditional TCGs</th>
+                    <th>AI Companions</th>
+                    <th style="color: var(--accent-cyan);">Us</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Original IP</td>
+                    <td class="cross">✗ Derivative</td>
+                    <td class="check">✓ Strong</td>
+                    <td class="cross">✗ Generic</td>
+                    <td class="check">✓ 7yr Trademarked</td>
+                </tr>
+                <tr>
+                    <td>Chain Relationships</td>
+                    <td class="cross">✗ None</td>
+                    <td class="cross">✗ None</td>
+                    <td class="cross">✗ None</td>
+                    <td class="check">✓ 12+ direct</td>
+                </tr>
+                <tr>
+                    <td>AI-Native Design</td>
+                    <td class="cross">✗ Bolted on</td>
+                    <td class="cross">✗ None</td>
+                    <td class="check">✓ Core</td>
+                    <td class="check">✓ Core product</td>
+                </tr>
+                <tr>
+                    <td>Own Agent Protocol</td>
+                    <td class="cross">✗ No</td>
+                    <td class="cross">✗ No</td>
+                    <td class="cross">✗ Third-party</td>
+                    <td class="check">✓ Pentagon Chain</td>
+                </tr>
+                <tr>
+                    <td>Entertainment Cred</td>
+                    <td class="cross">✗ Rare</td>
+                    <td class="check">✓ Strong</td>
+                    <td class="cross">✗ Tech-only</td>
+                    <td class="check">✓ Marvel/DC team</td>
+                </tr>
+                <tr>
+                    <td>Community Co-Creation</td>
+                    <td class="cross">✗ Lip service</td>
+                    <td class="cross">✗ Top-down</td>
+                    <td class="cross">✗ None</td>
+                    <td class="check">✓ Core model</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td>Time in Market</td>
+                    <td>Months</td>
+                    <td>Varies</td>
+                    <td>1-2 years</td>
+                    <td>7 Years</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ==================== SLIDE 16: REVENUE ==================== -->
+    <section class="slide" id="revenue">
+        <span class="slide-number">15 / Revenue Model</span>
+        <h2>Web2 revenue. <span class="hl">Web3 upside.</span></h2>
+        <p class="subtitle">The game makes money as a Web2 product. Web3 ownership is an opt-in layer that creates additional revenue without being required.</p>
+
+        <div class="revenue-grid">
+            <div class="revenue-card">
+                <div class="revenue-type">Web2 — Primary</div>
+                <div class="revenue-title">Card Packs & Starters</div>
+                <div class="revenue-desc">Digital + physical. Boosters, starter decks, premium bundles.</div>
+            </div>
+            <div class="revenue-card">
+                <div class="revenue-type">Web2 — Primary</div>
+                <div class="revenue-title">Battle Pass & Cosmetics</div>
+                <div class="revenue-desc">Seasonal pass. Agent skins. Card backs. Visual customization.</div>
+            </div>
+            <div class="revenue-card">
+                <div class="revenue-type">Web3 — Primary</div>
+                <div class="revenue-title">Agent NFT Minting</div>
+                <div class="revenue-desc">Web3 Agent with wallet, memory, collection. Premium upgrade path.</div>
+            </div>
+            <div class="revenue-card">
+                <div class="revenue-type">Web3 — Secondary</div>
+                <div class="revenue-title">Secondary Market Royalties</div>
+                <div class="revenue-desc">Revenue on card and Agent NFT trades.</div>
+            </div>
+            <div class="revenue-card">
+                <div class="revenue-type">Partnership</div>
+                <div class="revenue-title">Chain Sponsorships</div>
+                <div class="revenue-desc">Ecosystem partnerships, promo card sets, co-marketing.</div>
+            </div>
+            <div class="revenue-card">
+                <div class="revenue-type">Expansion</div>
+                <div class="revenue-title">Licensing & Organized Play</div>
+                <div class="revenue-desc">Merch, animation, publishing. Tournaments and prize pools.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 17: DEFENSIBILITY ==================== -->
+    <section class="slide" id="moat">
+        <span class="slide-number">16 / Defensibility</span>
+        <h2>Five moats that can't be copied</h2>
+
+        <div class="moat-list">
+            <div class="moat-item">
+                <div class="moat-number">01</div>
+                <div class="moat-content">
+                    <h4>Proprietary Agent Infrastructure</h4>
+                    <p>Pentagon Chain provides on-chain identity (ERC-AINFT), verified capabilities (ATS), and economic agency (TBA). We don't depend on third-party AI platforms. The game is the consumer app; the protocol is the platform moat.</p>
+                </div>
+            </div>
+            <div class="moat-item">
+                <div class="moat-number">02</div>
+                <div class="moat-content">
+                    <h4>7 Years of Chain Relationships</h4>
+                    <p>Direct partnerships with 12+ blockchain networks for character development. New entrants would need years to replicate these relationships.</p>
+                </div>
+            </div>
+            <div class="moat-item">
+                <div class="moat-number">03</div>
+                <div class="moat-content">
+                    <h4>Trademarked Original IP</h4>
+                    <p>US trademark protection. 20-30 professionally designed characters. Complete world bible. Legal foundation for licensing and enforcement.</p>
+                </div>
+            </div>
+            <div class="moat-item">
+                <div class="moat-number">04</div>
+                <div class="moat-content">
+                    <h4>Entertainment + Crypto Credibility</h4>
+                    <p>Marvel/DC creative team + 2017 blockchain veterans. Extremely rare combination that bridges both audiences authentically.</p>
+                </div>
+            </div>
+            <div class="moat-item">
+                <div class="moat-number">05</div>
+                <div class="moat-content">
+                    <h4>Community Attribution Flywheel</h4>
+                    <p>Permanent credit creates loyalty that compounds. By launch, hundreds of people have personal stake in the game's success — they become evangelists, moderators, and tournament organizers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 18: METRICS ==================== -->
+    <section class="slide" id="metrics">
+        <span class="slide-number">17 / Success Metrics</span>
+        <h2>How we measure</h2>
+
+        <div class="metrics-grid">
+            <div class="metrics-section">
+                <div class="metrics-title">Nexus Architects (Pre-Launch)</div>
+                <div class="metric-row"><span class="metric-label">Monthly Active Contributors</span><span class="metric-value">5,000+</span></div>
+                <div class="metric-row"><span class="metric-label">Card Submissions / Month</span><span class="metric-value">500+</span></div>
+                <div class="metric-row"><span class="metric-label">Trial Completions / Month</span><span class="metric-value">50,000+</span></div>
+                <div class="metric-row"><span class="metric-label">Architect Rank or Above</span><span class="metric-value">1,000+</span></div>
+                <div class="metric-row"><span class="metric-label">Week-One Retention</span><span class="metric-value">40%+</span></div>
+            </div>
+            <div class="metrics-section">
+                <div class="metrics-title">Hero Squad Showdown (Launch)</div>
+                <div class="metric-row"><span class="metric-label">D7 Retention (Beta)</span><span class="metric-value">30%+</span></div>
+                <div class="metric-row"><span class="metric-label">Max Archetype Winrate</span><span class="metric-value">&lt;55%</span></div>
+                <div class="metric-row"><span class="metric-label">Avg Match Length</span><span class="metric-value">3-5 min</span></div>
+                <div class="metric-row"><span class="metric-label">Players with Agent</span><span class="metric-value">70%+</span></div>
+                <div class="metric-row"><span class="metric-label">Matches with SYNC</span><span class="metric-value">30-50%</span></div>
+                <div class="metric-row"><span class="metric-label">Community-Contributed Cards</span><span class="metric-value">50%+</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 19: WHY NOW + ROADMAP ==================== -->
+    <section class="slide" id="roadmap">
+        <span class="slide-number">18 / Why Now + Roadmap</span>
+        <h2>7 years of foundation. <span class="hl-cyan">The product window is now.</span></h2>
+
+        <p class="subtitle">Three things had to converge before this product could exist: original IP with real chain relationships, consumer-ready blockchain infrastructure, and AI agent technology mature enough for persistent companions. All three are ready now — and we built the first two while waiting for the third.</p>
+
+        <div class="cards-grid cards-grid-3" style="margin-bottom: 2rem;">
+            <div class="card card-small">
+                <h4 style="color: var(--accent-gold);">2017-2021: IP & Relationships</h4>
+                <p>Built original characters with 12+ blockchain networks directly. Each hero co-developed with the chain's team. Secured US trademark. This work can't be speed-run — it required years of trust-building during crypto's growth era.</p>
+            </div>
+            <div class="card card-small">
+                <h4 style="color: var(--accent-blue);">2021-2024: Infrastructure</h4>
+                <p>Built Pentagon Chain (L2) and the Agentic Protocol while the blockchain gaming market burned through hype and crashed. The teams that rushed consumer products in 2021-22 are gone. We built infrastructure instead and survived the cycle.</p>
+            </div>
+            <div class="card card-small">
+                <h4 style="color: var(--accent-cyan);">2024-Now: The Product Window</h4>
+                <p>AI companions became technically viable in 2023-24. Blockchain gaming shed its scam reputation. The TCG market is booming post-Marvel Snap. All three conditions met — now we attach the product to 7 years of assets.</p>
+            </div>
+        </div>
+
+        <div class="highlight-box agent">
+            <p><strong>The key insight:</strong> We didn't spend 7 years building a product that failed to launch. We spent 7 years building assets (IP, chain relationships, infrastructure, trademark) that are prerequisites for the product — and waited for the market and technology to catch up. The product phase starts now.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h3>Execution Roadmap</h3>
+        <div class="timeline">
+            <div class="timeline-item completed">
+                <div class="timeline-year">2017-2024 — Complete</div>
+                <div class="timeline-title">Foundation Assets Built</div>
+                <div class="timeline-desc">12+ chain partnerships. 20-30 characters designed. US trademark. Pentagon Chain mainnet live. Team proven across market cycles.</div>
+            </div>
+            <div class="timeline-item completed">
+                <div class="timeline-year">2025 — In Progress</div>
+                <div class="timeline-title">Community Build + Design</div>
+                <div class="timeline-desc">AI hero design initiative live. Community character creation with lead artist refinement. Game design complete. Nexus Architects launching.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">Phase 0 — 4-6 Weeks</div>
+                <div class="timeline-title">Core Loop Playable</div>
+                <div class="timeline-desc">Internal team says "I want to play again." Prototype with real cards. Nexus Architects soft launch.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">Phase 1 — 6-8 Weeks</div>
+                <div class="timeline-title">Alpha</div>
+                <div class="timeline-desc">Feature complete. 50+ internal matches. Card Laboratory live. Agent Phase 1.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">Phase 2 — 8-12 Weeks</div>
+                <div class="timeline-title">Beta</div>
+                <div class="timeline-desc">External testing. 30%+ D7 retention target. Balance tuning. Agent Phase 2.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">Phase 3 — 4-6 Weeks</div>
+                <div class="timeline-title">Launch</div>
+                <div class="timeline-desc">80+ card set. Physical + digital. Tournament circuit. Agent Phase 3 deployed.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">Phase 4 — Ongoing</div>
+                <div class="timeline-title">Scale</div>
+                <div class="timeline-desc">Quarterly expansions. Agent Phase 4 (autonomous entities). Animation development. Licensing.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 20: THE ASK ==================== -->
+    <section class="slide" id="ask">
+        <span class="slide-number">19 / The Ask</span>
+        <h2>What we're raising</h2>
+
+        <div class="ask-grid">
+            <div class="ask-card primary">
+                <div class="ask-label">Seed Round</div>
+                <div class="ask-value" style="color: var(--accent-blue);">$2M</div>
+                <ul class="ask-use">
+                    <li>Game development (digital + physical)</li>
+                    <li>Art production pipeline</li>
+                    <li>Agent AI development</li>
+                    <li>Community platform (Nexus)</li>
+                    <li>Initial print run</li>
+                    <li>Tournament circuit launch</li>
+                </ul>
+            </div>
+            <div class="ask-card">
+                <div class="ask-label">Use of Funds — 18 Months</div>
+                <div class="ask-value">Allocation</div>
+                <ul class="ask-use">
+                    <li>40% — Product development</li>
+                    <li>25% — Art & content creation</li>
+                    <li>20% — Marketing & community</li>
+                    <li>15% — Operations & legal</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <p><strong>18-Month Milestones:</strong> 10K+ active Architects · Launch set of 200+ cards (50%+ community-contributed) · Digital + physical platforms live · First tournament circuit complete · Agent Phase 3 deployed · Licensing pipeline active.</p>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 21: VISION ==================== -->
+    <section class="slide" id="vision">
+        <span class="slide-number">20 / The Big Vision</span>
+        <h2>Where this goes</h2>
+        <p class="subtitle">The first franchise where every fan has an AI partner and every contributor gets permanent credit. The game is the product. The protocol is the platform.</p>
+
+        <div class="cards-grid cards-grid-3">
+            <div class="card">
+                <h3>Year 1</h3>
+                <p>TCG launch. Active community. Tournament circuit. Agent Phases 1-3 deployed. First licensing deals. 50K+ players.</p>
+            </div>
+            <div class="card">
+                <h3>Year 3</h3>
+                <p>Animated series development. International expansion. Agent Phase 4 — autonomous entities with wallets, assets, on-chain identity. 50K+ Architects.</p>
+            </div>
+            <div class="card">
+                <h3>Year 5</h3>
+                <p>Multi-format franchise. Console/PC adaptations. Pentagon Chain agent infrastructure licensed to other gaming studios. Mixed human-AI competitive ecosystem.</p>
+            </div>
+        </div>
+
+        <div class="highlight-box agent">
+            <p><strong>The platform play:</strong> Hero Squad Showdown is the flagship consumer application. Pentagon Chain's agent infrastructure extends to any game, creative tool, or autonomous agent ecosystem. The game proves the protocol. The protocol scales beyond gaming.</p>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 22: CTA ==================== -->
+    <section class="slide" id="cta">
+        <span class="slide-number">21 / Next Steps</span>
+        <h1>7 years building. <span class="gradient-text">Ready to scale.</span></h1>
+        <p class="subtitle" style="margin-left: auto; margin-right: auto;">The IP exists. The protocol is live. The team is proven. The game is designed. The community model is ready. Now we need capital to execute.</p>
+
+        <div class="cta-buttons">
+            <a href="#" class="btn btn-primary">Schedule a Call</a>
+            <a href="#" class="btn btn-secondary">Request Data Room</a>
+        </div>
+
+        <div class="contact-info">
+            <p>Hero Squad Showdown — Investor Materials</p>
+            <p style="font-size: 0.7rem;">Confidential — For Accredited Investors Only</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Hero Squad Showdown © 2025 — All Rights Reserved</p>
+        <p class="footer-legal">This presentation contains forward-looking statements and is intended for accredited investors only. Past performance does not guarantee future results. Pentagon Chain mainnet is live (Chain ID 3344). Features related to agent social identity and economic autonomy are in development/experimental phases. All trademarks are property of their respective owners. US Trademark Registered.</p>
+    </footer>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = '0.1s';
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.08 });
+
+        slides.forEach(slide => {
+            slide.style.animationPlayState = 'paused';
+            observer.observe(slide);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>
